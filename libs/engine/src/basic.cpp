@@ -4,28 +4,30 @@
 
 #include <iostream>
 
-namespace crank
-{
 
-    void states::basic::init() noexcept
+    crank::states::basic crank::states::basic::m_basic;
+
+namespace crank::states
+{
+    void basic::init() noexcept
     { std::cout << "basic::init()" << std::endl; }
 
-    void states::basic::cleanup() noexcept
+    void basic::cleanup() noexcept
     { std::cout << "basic::cleanup()" << std::endl; }
 
-    void states::basic::pause() noexcept
+    void basic::pause() noexcept
     { std::cout << "basic::pause()" << std::endl; }
 
-    void states::basic::resume() noexcept
+    void basic::resume() noexcept
     { std::cout << "basic::resume()" << std::endl; }
 
-    void states::basic::handle_events(engine& eng) noexcept
+    void basic::handle_events([[maybe_unused]] engine* eng) noexcept
     { std::cout << "basic::handle_events()" << std::endl; }
 
-    void states::basic::update(engine& eng) noexcept
+    void basic::update([[maybe_unused]] engine* eng) noexcept
     { std::cout << "basic::update()" << std::endl; }
 
-    void states::basic::draw(engine& eng) noexcept
+    void basic::draw([[maybe_unused]] engine* eng) noexcept
     { std::cout << "basic::draw()" << std::endl; }
 
 } /// namespace crank

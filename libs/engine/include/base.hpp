@@ -18,37 +18,34 @@
 
 #include <engine.hpp>
 
-namespace crank
+namespace crank::states
 {
-    namespace states
+
+    class base
     {
-        class base
-        {
-        protected:
-            base() { };
+    public:
+        virtual void init() noexcept = 0;
 
-        public:
-            virtual void init(engine& eng) noexcept = 0;
+        virtual void cleanup() noexcept = 0;
 
-            virtual void cleanup() noexcept = 0;
+        virtual void pause() noexcept = 0;
 
-            virtual void pause() noexcept = 0;
+        virtual void resume() noexcept = 0;
 
-            virtual void resume() noexcept = 0;
+        virtual void handle_events(engine* eng) noexcept = 0;
 
-            virtual void handle_events(engine& eng) noexcept = 0;
+        virtual void update(engine* engine) noexcept = 0;
 
-            virtual void update(engine& engine) noexcept = 0;
+        virtual void draw(engine* engine) noexcept = 0;
 
-            virtual void draw(engine& engine) noexcept = 0;
+        void change_state(engine* engine, base* state) noexcept
+        { engine->change_state(state); }
 
-            void change_state(engine& engine, base* state) noexcept
-            { engine.change_state(state); }
+    protected:
+        base() = default;
 
-        }; /// class base
+    }; /// class base
 
-    } /// namespace states
-
-} /// namespace crank
+} /// namespace crank::states
 
 #endif /// BASE_HPP

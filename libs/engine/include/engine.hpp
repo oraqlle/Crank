@@ -36,13 +36,13 @@ namespace crank
     namespace states 
     {
         class base;
-    };
+    }; /// namespace states
 
 
     class engine
     {
     protected:
-        static bool m_running;
+        bool m_running;
         bool m_resetting;
 
         std::vector<states::base*> m_states;

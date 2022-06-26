@@ -38,16 +38,17 @@ namespace crank
         }
     }
 
-
+    /// \brief aka adds state to the stack
     void engine::push_state(states::base* state) noexcept
     {
         if (!m_states.empty()) 
         { m_states.back()->pause(); }
 
-        m_states.push_back(std::move(state));
-        m_states.back()->init(*this);
+        m_states.push_back(state);
+        m_states.back()->init();
     }
 
+    /// \brief aka removes state from the stack
     void engine::pop_state() noexcept
     {
         if (!m_states.empty())
@@ -60,6 +61,7 @@ namespace crank
         { m_states.back()->resume(); }
     }
 
+    /// \notes Changes this state ie. deletes current one, adds new one inplace
     void engine::change_state(states::base* state) noexcept
     {
         if (!m_states.empty())
@@ -69,7 +71,7 @@ namespace crank
         }
 
         m_states.push_back(state);
-        m_states.back()->init(*this);        
+        m_states.back()->init();        
     }
 
     void engine::reset() noexcept
@@ -84,19 +86,19 @@ namespace crank
     void engine::handle_events() noexcept
     {
         if (!m_states.empty())
-        { m_states.back()->handle_events(*this); }
+        { m_states.back()->handle_events(this); }
     }
 
     void engine::update() noexcept
     {
         if (!m_states.empty())
-        { m_states.back()->update(*this); }
+        { m_states.back()->update(this); }
     }
 
     void engine::draw() noexcept
     {
         if (!m_states.empty())
-        { m_states.back()->draw(*this); }
+        { m_states.back()->draw(this); }
     }
 
     void engine::quit() noexcept

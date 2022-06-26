@@ -19,40 +19,37 @@
 #include <engine.hpp>
 #include <base.hpp>
 
-namespace crank
+namespace crank::states
 {
-    namespace states
+
+    class basic : public base
     {
-        class basic : public base
-        {
-        protected:
-            basic() { };
-        
-        private:
-            static basic m_basic;
+    public:
+        void init() noexcept;
 
-        public:
-            void init() noexcept;
+        void cleanup() noexcept;
 
-            void cleanup() noexcept;
+        void pause() noexcept;
 
-            void pause() noexcept;
+        void resume() noexcept;
 
-            void resume() noexcept;
+        void handle_events(engine* eng) noexcept;
 
-            void handle_events(engine& eng) noexcept;
+        void update(engine* engine) noexcept;
 
-            void update(engine& engine) noexcept;
+        void draw(engine* engine) noexcept;
 
-            void draw(engine& engine) noexcept;
+        static basic* instance()
+        { return &m_basic; }
 
-            static basic* instance()
-            { return &m_basic; }
+    protected:
+        basic() = default;
+    
+    private:
+        static basic m_basic;
 
-        }; /// class basic
+    }; /// class basic
 
-    } /// namespace states
-
-} /// namespace crank
+} /// namespace crank::states
 
 #endif /// BASIC_HPP
