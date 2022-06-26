@@ -8,9 +8,6 @@ test-dependencies:
 libraries:
   - name: engine
     path: libs/engine
-  - name: states
-    path: libs/states
-    using: [engine]
 
 
 readme: README.md

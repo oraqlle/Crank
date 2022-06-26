@@ -16,7 +16,7 @@
 #ifndef BASIC_HPP
 #define BASIC_HPP 1
 
-#include <engine/src/engine.hpp>
+#include <engine.hpp>
 #include <base.hpp>
 
 namespace crank
@@ -46,8 +46,8 @@ namespace crank
 
             void draw(engine& engine) noexcept;
 
-            static basic instance()
-            { return m_basic; }
+            static basic* instance()
+            { return &m_basic; }
 
         }; /// class basic
 

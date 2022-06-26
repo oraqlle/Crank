@@ -12,7 +12,7 @@
 /// license: MIT
 
 #include <engine.hpp>
-#include <states/src/base.hpp>
+#include <base.hpp>
 
 
 namespace crank

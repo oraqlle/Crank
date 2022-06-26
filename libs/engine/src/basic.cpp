@@ -1,6 +1,6 @@
-#include <engine/src/engine.hpp>
-#include <states/src/base.hpp>
-#include <states/src/basic.hpp>
+#include <engine.hpp>
+#include <base.hpp>
+#include <basic.hpp>
 
 #include <iostream>
 
