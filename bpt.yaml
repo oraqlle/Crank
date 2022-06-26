@@ -1,0 +1,25 @@
+name: crank
+version: 0.1.0
+
+test-dependencies:
+  - catch2@2.13.9 using main
+
+
+readme: README.md
+
+
+description: |
+  A small runtime engine and framework.
+
+
+repository: https://github.com/oraqlle/crank
+
+
+documentation: https://github.com/oraqlle/crank/tree/main/docs
+
+
+license: MIT
+
+
+authors:
+  - Tyler Swann <oraqlle@github.com>
