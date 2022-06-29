@@ -17,7 +17,8 @@
 
 namespace crank
 {
-    void engine::init(details::__dim&& window, details::__dim&& viewport) noexcept
+
+    void engine::init(details::dim&& window, details::dim&& viewport) noexcept
     {
         m_running = true;
         m_resetting = false;
@@ -26,8 +27,10 @@ namespace crank
         m_viewport = std::move(viewport);
     }
 
+
     engine::~engine() noexcept
     { }
+
 
     void engine::cleanup() noexcept
     {
@@ -38,7 +41,7 @@ namespace crank
         }
     }
 
-    /// \brief aka adds state to the stack
+    
     void engine::push_state(states::base* state) noexcept
     {
         if (!m_states.empty()) 
@@ -48,7 +51,7 @@ namespace crank
         m_states.back()->init();
     }
 
-    /// \brief aka removes state from the stack
+    
     void engine::pop_state() noexcept
     {
         if (!m_states.empty())
@@ -61,7 +64,8 @@ namespace crank
         { m_states.back()->resume(); }
     }
 
-    /// \notes Changes this state ie. deletes current one, adds new one inplace
+
+    
     void engine::change_state(states::base* state) noexcept
     {
         if (!m_states.empty())
@@ -74,14 +78,16 @@ namespace crank
         m_states.back()->init();        
     }
 
+
     void engine::reset() noexcept
     {
         m_resetting = true;
         m_running = false;
 
         this->cleanup();
-        this->init(std::forward<details::__dim>(m_window), std::forward<details::__dim>(m_viewport));
+        this->init(std::forward<details::dim>(m_window), std::forward<details::dim>(m_viewport));
     }
+
 
     void engine::handle_events() noexcept
     {
@@ -89,11 +95,13 @@ namespace crank
         { m_states.back()->handle_events(this); }
     }
 
+
     void engine::update() noexcept
     {
         if (!m_states.empty())
         { m_states.back()->update(this); }
     }
+
 
     void engine::draw() noexcept
     {
@@ -101,11 +109,14 @@ namespace crank
         { m_states.back()->draw(this); }
     }
 
+
     void engine::quit() noexcept
     { m_running = false; }
 
+
     bool engine::running() const noexcept
     { return m_running; }
+
 
     bool engine::resetting() const noexcept
     { return m_resetting; }
