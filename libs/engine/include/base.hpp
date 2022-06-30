@@ -35,13 +35,14 @@ namespace crank::states
         /// \brief Default Virtual Destructor
         virtual ~base() = default;
 
+
         /// \brief Initialize the state.
         ///
         /// \details Used to initialize the state.
         /// This is called before the state is pushed to.
         /// In the derived states, you can define state
-        /// initializer parameters, which are taken by `init`. 
-        virtual void init() noexcept = 0;
+        /// initializer parameters, which are taken by `init`.
+        virtual void init(engine* eng) noexcept = 0;
 
 
         /// \brief Cleanup the state.

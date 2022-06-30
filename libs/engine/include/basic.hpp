@@ -41,7 +41,7 @@ namespace crank::states
     class basic : public base
     {
     public:
-        void init() noexcept;
+        void init(engine* eng) noexcept;
 
         void cleanup() noexcept;
 

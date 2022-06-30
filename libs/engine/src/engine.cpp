@@ -28,10 +28,6 @@ namespace crank
     }
 
 
-    engine::~engine() noexcept
-    { }
-
-
     void engine::cleanup() noexcept
     {
         while(!m_states.empty())
@@ -48,7 +44,7 @@ namespace crank
         { m_states.back()->pause(); }
 
         m_states.push_back(state);
-        m_states.back()->init();
+        m_states.back()->init(this);
     }
 
     
@@ -75,17 +71,7 @@ namespace crank
         }
 
         m_states.push_back(state);
-        m_states.back()->init();        
-    }
-
-
-    void engine::reset() noexcept
-    {
-        m_resetting = true;
-        m_running = false;
-
-        this->cleanup();
-        this->init(std::forward<details::dim>(m_window), std::forward<details::dim>(m_viewport));
+        m_states.back()->init(this);      
     }
 
 
@@ -116,9 +102,5 @@ namespace crank
 
     bool engine::running() const noexcept
     { return m_running; }
-
-
-    bool engine::resetting() const noexcept
-    { return m_resetting; }
     
 } /// namespace crank

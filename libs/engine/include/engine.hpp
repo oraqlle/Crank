@@ -18,7 +18,7 @@
 
 #include <vector>
 #include <utility>
-#include <concepts>
+#include <memory>
 
 /// \brief crank namespace
 namespace crank
@@ -53,8 +53,6 @@ namespace crank
         bool m_resetting;
 
         std::vector<states::base*> m_states;
-    
-    public:
 
         details::dim m_window;
         details::dim m_viewport;
@@ -79,7 +77,7 @@ namespace crank
 
 
         /// \brief Destructor.
-        ~engine();
+        ~engine() = default;
 
 
         /// \brief Performs clean up 

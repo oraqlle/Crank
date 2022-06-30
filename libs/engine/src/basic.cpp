@@ -9,7 +9,7 @@
 
 namespace crank::states
 {
-    void basic::init() noexcept
+    void basic::init([[maybe_unused]] engine* eng) noexcept
     { std::cout << "basic::init()" << std::endl; }
 
     void basic::cleanup() noexcept
