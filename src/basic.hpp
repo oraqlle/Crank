@@ -16,8 +16,8 @@
 #ifndef BASIC_HPP
 #define BASIC_HPP 1
 
-#include <engine/engine.hpp>
-#include <states/base.hpp>
+#include <crank/crank.hpp>
+#include <globals.hpp>
 
 #include <string>
 
@@ -75,10 +75,6 @@ namespace crank::states
         /// \brief Static instance of the this 
         /// state type.
         static basic m_basic;
-
-
-        int num;
-        std::string str;
 
     }; /// class basic
 

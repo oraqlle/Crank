@@ -18,13 +18,15 @@
 namespace crank
 {
 
-    void engine::init(details::dim&& window, details::dim&& viewport) noexcept
+    void engine::init(details::dim&& window, details::dim&& viewport, data* globals) noexcept
     {
         m_running = true;
         m_resetting = false;
 
         m_window = std::move(window);
         m_viewport = std::move(viewport);
+
+        m_globals = globals;
     }
 
 

@@ -1,14 +1,21 @@
-#include <crank.hpp>
+#include <crank/crank.hpp>
 #include <basic.hpp>
 
 #include <iostream>
 #include <string>
 
 
+global_var global_var::m_globals(0, "global_var");
+
+
 auto main() -> int
 {
     auto engine = crank::engine();
-    engine.init({640, 480}, {640, 480});
+
+    std::cout << "num: " << global_var::instance()->num << std::endl;
+    std::cout << "str: " << global_var::instance()->str << std::endl;
+
+    engine.init({640, 480}, {640, 480}, global_var::instance());
 
     engine.change_state(crank::states::basic::instance());
 

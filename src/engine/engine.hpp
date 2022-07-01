@@ -45,6 +45,9 @@ namespace crank
     }; /// namespace states
 
 
+    class data; ///< Forward declaration of crank::data class.
+
+
     /// \brief The basic engine class. Used to manage states 
     /// and state transistions.
     class engine
@@ -58,6 +61,8 @@ namespace crank
 
         details::dim m_window;
         details::dim m_viewport;
+
+        data* m_globals;
 
     public:
 
@@ -75,7 +80,7 @@ namespace crank
         /// type: crank::details::dim | qualifiers: [rvalue]
         /// @param viewport The viewport dimensions.
         /// type: crank::details::dim | qualifiers: [rvalue]
-        void init(details::dim&& window, details::dim&& viewport) noexcept;
+        void init(details::dim&& window, details::dim&& viewport, data* globals) noexcept;
 
 
         /// \brief Destructor.

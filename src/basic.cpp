@@ -3,12 +3,16 @@
 #include <iostream>
 
 
-    crank::states::basic crank::states::basic::m_basic;
+crank::states::basic crank::states::basic::m_basic;
 
 namespace crank::states
 {   
     void basic::init() noexcept
-    { std::cout << "basic::init()" << std::endl; }
+    { 
+        std::cout << "basic::init()" << std::endl;
+        // std::cout << "init::m_globals->num = " << globals->num << std::endl;
+        // std::cout << "init::m_globals->str = " << globals->str << std::endl;
+    }
 
     void basic::cleanup() noexcept
     { std::cout << "basic::cleanup()" << std::endl; }
