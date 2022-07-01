@@ -44,7 +44,7 @@ namespace crank::states
     {
     public:
 
-        void init() noexcept;
+        void init(std::shared_ptr<engine> eng) noexcept;
 
         void cleanup() noexcept;
 
@@ -52,11 +52,11 @@ namespace crank::states
 
         void resume() noexcept;
 
-        void handle_events(engine* eng) noexcept;
+        void handle_events(std::shared_ptr<crank::engine> eng) noexcept;
 
-        void update(engine* engine) noexcept;
+        void update(std::shared_ptr<crank::engine> eng) noexcept;
 
-        void draw(engine* engine) noexcept;
+        void draw(std::shared_ptr<crank::engine> eng) noexcept;
 
         /// \brief Get the state instance.
         ///

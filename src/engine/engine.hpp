@@ -62,7 +62,7 @@ namespace crank
         details::dim m_window;
         details::dim m_viewport;
 
-        data* m_globals;
+        std::shared_ptr<engine> m_self;
 
     public:
 
@@ -76,11 +76,13 @@ namespace crank
         /// \details The window and viewport dimensions
         /// are moved into the engine.
         ///
-        /// @param window The window dimensions.
+        /// \param window The window dimensions.
         /// type: crank::details::dim | qualifiers: [rvalue]
-        /// @param viewport The viewport dimensions.
+        /// \param viewport The viewport dimensions.
         /// type: crank::details::dim | qualifiers: [rvalue]
-        void init(details::dim&& window, details::dim&& viewport, data* globals) noexcept;
+        /// \param self The shared pointer to this engine.
+        /// type: std::shared_ptr<crank::engine>
+        void init(details::dim&& window, details::dim&& viewport, std::shared_ptr<engine> self) noexcept;
 
 
         /// \brief Destructor.
@@ -99,7 +101,7 @@ namespace crank
         /// \details Push a pointer of a state to
         /// the engine state stack.
         ///
-        /// @param state The state to push.
+        /// \param state The state to push.
         /// type: crank::states::base*
         void push_state(states::base* state) noexcept;
 

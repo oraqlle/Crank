@@ -44,7 +44,10 @@ namespace crank::states
         /// This is called before the state is pushed to.
         /// In the derived states, you can define state
         /// initializer parameters, which are taken by `init`.
-        virtual void init() noexcept = 0;
+        ///
+        /// \param self The shared pointer to this engine.
+        /// type: std::shared_ptr<crank::engine>
+        virtual void init(std::shared_ptr<crank::engine> eng) noexcept = 0;
 
 
         /// \brief Cleanup the state.
@@ -60,22 +63,31 @@ namespace crank::states
 
 
         /// \brief Handle events.
-        virtual void handle_events(engine* eng) noexcept = 0;
+        virtual void handle_events(std::shared_ptr<crank::engine> eng) noexcept = 0;
 
 
         /// \brief Update the state.
-        virtual void update(engine* engine) noexcept = 0;
+        ///
+        /// \param self The shared pointer to this engine.
+        /// type: std::shared_ptr<crank::engine>
+        virtual void update(std::shared_ptr<crank::engine> eng) noexcept = 0;
 
 
         /// \brief Draw the state.
-        virtual void draw(engine* engine) noexcept = 0;
+        ///
+        /// \param self The shared pointer to this engine.
+        /// type: std::shared_ptr<crank::engine>
+        virtual void draw(std::shared_ptr<crank::engine> eng) noexcept = 0;
         
 
         /// \brief Change the state.
         ///
         /// \details Used to change the state.
-        void change_state(engine* engine, base* state) noexcept
-        { engine->change_state(state); }
+        ///
+        /// \param self The shared pointer to this engine.
+        /// type: std::shared_ptr<crank::engine>
+        void change_state(std::shared_ptr<crank::engine> eng, base* state) noexcept
+        { eng->change_state(state); }
 
     protected:
 

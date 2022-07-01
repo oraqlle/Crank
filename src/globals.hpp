@@ -1,23 +1,23 @@
 #include <data/data.hpp>
 #include <string>
 
-class global_var : public crank::data
+class global_vars : public crank::data
 {
 protected:
-    global_var() = default;
+    global_vars() = default;
 
 public:
-    explicit global_var(int n, const std::string& s) 
+    explicit global_vars(int n, const std::string& s) 
     : num(n) 
     , str(s)
     {}
 
-    static global_var* instance()
+    static global_vars* instance()
     { return &m_globals; }
 
 private:
 
-    static global_var m_globals;
+    static global_vars m_globals;
 
 public:
 

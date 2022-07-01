@@ -18,7 +18,7 @@
 namespace crank
 {
 
-    void engine::init(details::dim&& window, details::dim&& viewport, data* globals) noexcept
+    void engine::init(details::dim&& window, details::dim&& viewport, std::shared_ptr<engine> self) noexcept
     {
         m_running = true;
         m_resetting = false;
@@ -26,7 +26,7 @@ namespace crank
         m_window = std::move(window);
         m_viewport = std::move(viewport);
 
-        m_globals = globals;
+        m_self = self;
     }
 
 
@@ -46,7 +46,7 @@ namespace crank
         { m_states.back()->pause(); }
 
         m_states.push_back(state);
-        m_states.back()->init();
+        m_states.back()->init(m_self);
     }
 
     
@@ -73,28 +73,28 @@ namespace crank
         }
 
         m_states.push_back(state);
-        m_states.back()->init();      
+        m_states.back()->init(m_self);      
     }
 
 
     void engine::handle_events() noexcept
     {
         if (!m_states.empty())
-        { m_states.back()->handle_events(this); }
+        { m_states.back()->handle_events(m_self); }
     }
 
 
     void engine::update() noexcept
     {
         if (!m_states.empty())
-        { m_states.back()->update(this); }
+        { m_states.back()->update(m_self); }
     }
 
 
     void engine::draw() noexcept
     {
         if (!m_states.empty())
-        { m_states.back()->draw(this); }
+        { m_states.back()->draw(m_self); }
     }
 
 
@@ -104,6 +104,5 @@ namespace crank
 
     bool engine::running() const noexcept
     { return m_running; }
-
     
 } /// namespace crank
