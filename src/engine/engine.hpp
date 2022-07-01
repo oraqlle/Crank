@@ -41,6 +41,7 @@ namespace crank
     namespace states 
     {
         class base; ///< Forward declaration of states::base class.
+
     }; /// namespace states
 
 
@@ -49,10 +50,11 @@ namespace crank
     class engine
     {
     protected:
+
         bool m_running;
         bool m_resetting;
 
-        std::vector<states::base*> m_states;
+        mutable std::vector<states::base*> m_states;
 
         details::dim m_window;
         details::dim m_viewport;
@@ -109,13 +111,6 @@ namespace crank
         /// \details Performs clean up of the last state
         /// on the stack, then pushes a new state.
         void change_state(states::base* state) noexcept;
-
-
-        /// \brief Reset engine
-        ///
-        /// \details Performs clean up of all states
-        /// on the stack, then resets the engine.
-        void reset() noexcept;
 
 
         /// \brief Handle events.

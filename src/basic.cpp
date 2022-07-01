@@ -1,5 +1,3 @@
-#include <engine.hpp>
-#include <base.hpp>
 #include <basic.hpp>
 
 #include <iostream>
@@ -8,8 +6,8 @@
     crank::states::basic crank::states::basic::m_basic;
 
 namespace crank::states
-{
-    void basic::init([[maybe_unused]] engine* eng) noexcept
+{   
+    void basic::init() noexcept
     { std::cout << "basic::init()" << std::endl; }
 
     void basic::cleanup() noexcept

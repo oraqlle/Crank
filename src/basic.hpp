@@ -16,8 +16,10 @@
 #ifndef BASIC_HPP
 #define BASIC_HPP 1
 
-#include <engine.hpp>
-#include <base.hpp>
+#include <engine/engine.hpp>
+#include <states/base.hpp>
+
+#include <string>
 
 
 /// \brief crank::states namespace
@@ -41,7 +43,8 @@ namespace crank::states
     class basic : public base
     {
     public:
-        void init(engine* eng) noexcept;
+
+        void init() noexcept;
 
         void cleanup() noexcept;
 
@@ -72,6 +75,10 @@ namespace crank::states
         /// \brief Static instance of the this 
         /// state type.
         static basic m_basic;
+
+
+        int num;
+        std::string str;
 
     }; /// class basic
 

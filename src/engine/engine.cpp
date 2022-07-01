@@ -11,8 +11,8 @@
 ///
 /// license: MIT
 
-#include <engine.hpp>
-#include <base.hpp>
+#include <engine/engine.hpp>
+#include <states/base.hpp>
 
 
 namespace crank
@@ -44,7 +44,7 @@ namespace crank
         { m_states.back()->pause(); }
 
         m_states.push_back(state);
-        m_states.back()->init(this);
+        m_states.back()->init();
     }
 
     
@@ -71,7 +71,7 @@ namespace crank
         }
 
         m_states.push_back(state);
-        m_states.back()->init(this);      
+        m_states.back()->init();      
     }
 
 
@@ -102,5 +102,6 @@ namespace crank
 
     bool engine::running() const noexcept
     { return m_running; }
+
     
 } /// namespace crank

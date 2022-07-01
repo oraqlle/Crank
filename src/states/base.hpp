@@ -16,7 +16,8 @@
 #ifndef BASE_HPP
 #define BASE_HPP 1
 
-#include <engine.hpp>
+#include <engine/engine.hpp>
+#include <utility>
 
 
 /// \brief crank::states namespace
@@ -42,7 +43,7 @@ namespace crank::states
         /// This is called before the state is pushed to.
         /// In the derived states, you can define state
         /// initializer parameters, which are taken by `init`.
-        virtual void init(engine* eng) noexcept = 0;
+        virtual void init() noexcept = 0;
 
 
         /// \brief Cleanup the state.
@@ -67,7 +68,7 @@ namespace crank::states
 
         /// \brief Draw the state.
         virtual void draw(engine* engine) noexcept = 0;
-
+        
 
         /// \brief Change the state.
         ///
