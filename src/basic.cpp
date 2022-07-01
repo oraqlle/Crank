@@ -12,6 +12,12 @@ namespace crank::states
         std::cout << "basic::init() with engine ptr count: " << eng.use_count() << std::endl;
         std::cout << "init::m_globals->num = " << global_vars::instance()->num << std::endl;
         std::cout << "init::m_globals->str = " << global_vars::instance()->str << std::endl;
+
+        if (global_vars::instance()->num == 0)
+        {
+            global_vars::instance()->num = 1;
+            global_vars::instance()->str = "hello";
+        }
     }
 
     void basic::cleanup() noexcept

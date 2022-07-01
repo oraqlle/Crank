@@ -19,6 +19,15 @@
 namespace crank
 {
 
+    /// \brief Data Class
+    ///
+    /// \details Used to store shared data between states.
+    /// This is a virtual class, and is designed to be inherited
+    /// by a user defined class that defines the possible member
+    /// variables and methods available.
+    ///
+    /// \link Have a look at the [global variables](docs/global_data) 
+    /// docs and examples for more details.
     class data
     {
     protected:
