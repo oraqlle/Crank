@@ -9,6 +9,9 @@ _deps/*
 # Project configuration folders
 .vscode/*
 
+# Source Distributions
+*.tar.gz
+
 # Prerequisites
 *.d
 
