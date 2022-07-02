@@ -42,7 +42,7 @@ namespace crank
     {
         class base; ///< Forward declaration of states::base class.
 
-    }; /// namespace states
+    } /// namespace states
 
 
     class data; ///< Forward declaration of crank::data class.
