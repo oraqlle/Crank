@@ -3,14 +3,10 @@
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)
 [![License](https://img.shields.io/github/license/oraqlle/crank)](LICENSE)
 ![Current Release](https://img.shields.io/github/v/release/oraqlle/crank?include_prerelease)
-![bpt Version](https://img.shields.io/badge/bpt%20version%3A-1.0.0--beta--1-blue)
-![C++ Standard](https://img.shields.io/badge/C%2B%2B%20Standard-C%2B%2B11..20-red)
-![GCC](https://img.shields.io/badge/GCC-11.1.0-yellow)
-![Clang](https://img.shields.io/badge/clang-12.0.0-yellow)
 
 ## Welcome
 
-Crank is a simple and state management framework. It allows you to create state pages that are pushed and popped onto a state-stack. Pages are polymorphic types that are derived from a base state class which becomes the blueprint for how the state is managed by the engine.
+Crank is a simple state management framework in C++. It allows you to create state as pages that are pushed and popped onto a page stack.
 
 Crank is designed to by as simple as possible and only provides a runtime framework for managing states. It is not designed to be able to render images/displays or handle other forms of processing.
 
@@ -32,39 +28,14 @@ Crank is built using the [bpt](https://bpt.pizza) build tool and is hosted on th
     - [Making an Engine Object](#making-an-engine-object)
     - [Final Result](#final-result)
   - [Links and Resources](#links-and-resources)
-    - [bpt](#bpt)
-    - [Trove](#trove)
 
 ---
 
 ## Adding to your project
 
-To add crank to your project you'll need to two things. First, you're project or package must be using the bpt build tool and have a subsequent `bpt.yaml` file. In the file add the specifier `dependencies:` (if you haven't already got other dependencies) followed by the crank package.
+Add `crank@0.1.0` under the dependencies section of your `bpt.yaml` file and run `bpt build` with `--use-repo "trovepi.dev"` (or `-r "trovepi.dev"`) to use the appropriate CRS lookup.
 
-e.g.
-
-```yaml
-# ...
-
-dependencies:
-- crank@0.1.0
-
-# ...
-```
-
-This will tell bpt that you are using a package called `crank`. If your project or package uses many libraries, you have to specify which libraries are using `crank`. Details in the [links](#links-and-resources) section below.
-
-To use this package, you have to specify where to look for the package to the bpt CLI. This is done using the `--use-repo=` sub-command. This command allows you to use the [Trove](https://trovepi.dev) public repo.
-
-e.g.
-
-```sh
-bpt build -t :c++20:gcc-11 --use-repo="https://trovepi.dev"
-```
-
-This will allow bpt to find and crank, download it and build against it. This sub-command is important as otherwise bpt will not know where to find the package. Details on bpt's design rational regarding this can be found [here](https://bpt.pizza).
-
-To include the crank engine you only need to use the `<crank.hpp>` header and any headers you make containing derived state classes.
+Crank can be including entirely from the `<crank.hxx>` header.
 
 ---
 
@@ -72,11 +43,11 @@ To include the crank engine you only need to use the `<crank.hpp>` header and an
 
 This framework has two major components, the runtime engine which manages the state-stack and flow of operations and the states.
 
-Crank uses the _Input, Update, Output_ (IUO) model to runa  program. In crank these are methods available in both the `crank::engine` class and `crank::states::base` class called _handle_events(), update(),_ and _draw()_ respectively.
+Crank uses the _Input, Update, Output_ (IUO) model to run a program. In crank these are methods available in both the `crank::engine` class and `crank::states::base` class called _handle_events(), update(),_ and _render()_ respectively.
 
-- `handle_events()` - Handles events suchs as keyboard input.
+- `handle_events()` - Handles events such as keyboard input.
 - `update()` - Updates the internal state of a given state object
-- `draw()` - Outputs the updated state such as rendering to the screen or output to a console.
+- `render()` - Outputs the updated state such as rendering to the screen or output to a console.
 
 An example of a simple running program can be found in the [example](#example) section below.
 
@@ -96,7 +67,7 @@ Change state is a bit different, if you want to change to a new state but don't 
 
 The `crank::states::base` class is a pure virtual class design to blueprint the interface that a state should provide. These are only the minimum requirements for the engine to use the state, in derived state classes, you can implement other methods for handle other operations specific to that states processing.
 
-The main methods provided by `crank::states::base` are the `handle_events()`, `update()` and `draw()` methods. These methods are called by the engine when the corresponding engine methods are called. They are used to ahndle the main processes that can occur in a game or program.
+The main methods provided by `crank::states::base` are the `handle_events()`, `update()` and `draw()` methods. These methods are called by the engine when the corresponding engine methods are called. They are used to handle the main processes that can occur in a game or program.
 
 The base class provides and interface for a `init()` method; called whenever the state is pushed to the engines state-stack and a `cleanup()` method called whenever the state is changed from the engines state-stack.
 
@@ -124,13 +95,13 @@ One thing to note about states is that you are able to create whatever members a
 
 ## Example
 
-Here I will give a full implmentation of a basic state and a main function that runs the engine for a few loop iterations. The state will be called `basic` and will be injected in the `crank::states` namespace. It is **_not_** recommended to inject your own states into this namespace.
+Here I will give a full implementation of a basic state and a main function that runs the engine for a few loop iterations. The state will be called `basic` and will be injected in the `crank::states` namespace. It is **_not_** recommended to inject your own states into this namespace.
 
 ### A simple state
 
 Here I have implemented the interface for the `basic` class. The main thing to notice is the use of the static self member and the `instance()` method.
 
-```hpp
+```cpp
 #ifndef BASIC_HPP
 #define BASIC_HPP 1
 
@@ -233,7 +204,7 @@ What you'll notice is the explicit constructor, this is used so that the global 
 
 The second thing to notice is that this variation of `global_vars` is similar to how we implemented the `basic` class. A stati self member and a method (`instance()`) for accessing a pointer to the self reference. This allows you to use the `instance()` method to access the global data like a struct pointer.
 
-```hpp
+```cpp
 #include <crank/crank.hpp>
 #include <string>
 
@@ -371,15 +342,5 @@ basic::cleanup()
 
 ## Links and Resources
 
-### bpt
-
-- [bpt](https://bpt.pizza)
-- [bpt install guide]()
-- [Adding dependencies]()
-- [Library dependencies]()
-
-### Trove
-
-- ["Hello World!" with bpt]()
+- [bpt](https://bpt.pizza/docs/latest/index.html)
 - [Trove](https://trovepi.dev)
-- [Using packages from Trove for your projects](https://trovepi.dev)
