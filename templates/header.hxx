@@ -1,4 +1,4 @@
-// -*- C++ -*- Header compatibility <crank.hxx>
+// -*- C++ -*- Header compatibility <file.hxx>
 
 /// \brief 
 ///
@@ -6,18 +6,23 @@
 /// 
 /// Header Version: v0.1.0
 ///
-/// Date: 02-01-2023
+/// Date: xx-xx-xxxx
 ///
 /// License: MIT
 ///
 /// Copyright: Copyright (c) 2022-2023
-/// \file crank.hxx
+/// \file file.hxx
 
 #ifndef CRANK_
 #   define CRANK_
 
-#include <engine/engine.hxx>
-#include <states/base.hxx>
-#include <data/data.hxx>
+
+namespace crank
+{
+
+    
+
+}  /// namespace cxl
+
 
 #endif  /// CRANK_

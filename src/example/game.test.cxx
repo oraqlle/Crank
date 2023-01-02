@@ -1,5 +1,5 @@
-#include <crank/crank.hpp>
-#include <example/basic.hpp>
+#include <crank/crank.hxx>
+#include <example/basic.hxx>
 
 #include <iostream>
 #include <string>

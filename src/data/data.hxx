@@ -14,7 +14,7 @@
 #ifndef DATA_HPP
 #define DATA_HPP 1
 
-#include <engine/engine.hpp>
+#include <engine/engine.hxx>
 
 namespace crank
 {

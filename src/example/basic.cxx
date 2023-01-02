@@ -1,4 +1,4 @@
-#include <example/basic.hpp>
+#include <example/basic.hxx>
 
 #include <iostream>
 

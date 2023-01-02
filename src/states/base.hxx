@@ -16,7 +16,7 @@
 #ifndef BASE_HPP
 #define BASE_HPP 1
 
-#include <engine/engine.hpp>
+#include <engine/engine.hxx>
 
 #include <utility>
 

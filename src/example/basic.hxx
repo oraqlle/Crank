@@ -16,8 +16,8 @@
 #ifndef BASIC_HPP
 #define BASIC_HPP 1
 
-#include <crank/crank.hpp>
-#include <example/globals.hpp>
+#include <crank/crank.hxx>
+#include <example/globals.hxx>
 
 #include <string>
 

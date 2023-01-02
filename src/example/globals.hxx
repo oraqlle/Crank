@@ -1,4 +1,4 @@
-#include <crank/crank.hpp>
+#include <crank/crank.hxx>
 #include <string>
 
 class global_vars : public crank::data
