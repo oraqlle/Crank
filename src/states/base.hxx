@@ -5,23 +5,22 @@
 ///
 /// author: Tyler Swann (oraqlle@github.com)
 ///
-/// version: 0.1.0
+/// version: 0.2.0
 ///
-/// date: 26-06-2022
+/// date: 02-01-2023
 ///
-/// copyright: Copyright (c) 2022
+/// copyright: Copyright (c) 2022-2023
 ///
 /// license: MIT
 
-#ifndef BASE_HPP
-#define BASE_HPP 1
+#ifndef CRANK_STATES_BASE
+#   define CRANK_STATES_BASE
 
 #include <engine/engine.hxx>
 
 #include <utility>
 
 
-/// \brief crank::states namespace
 namespace crank::states
 {
 
@@ -45,57 +44,48 @@ namespace crank::states
         /// In the derived states, you can define state
         /// initializer parameters, which are taken by `init`.
         ///
-        /// \param self The shared pointer to this engine.
-        /// type: std::shared_ptr<crank::engine>
-        virtual void init(std::shared_ptr<crank::engine> eng) noexcept = 0;
-
+        /// \param eng type: crank::engine&
+        virtual void init(crank::engine& eng) noexcept = 0;
 
         /// \brief Cleanup the state.
         virtual void cleanup() noexcept = 0;
         
-
         /// \brief Pause the state.
         virtual void pause() noexcept = 0;
-
 
         /// \brief Resume the state.
         virtual void resume() noexcept = 0;
 
-
         /// \brief Handle events.
-        virtual void handle_events(std::shared_ptr<crank::engine> eng) noexcept = 0;
-
+        ///
+        /// \param eng type: crank::engine&
+        virtual void handle_events(crank::engine& eng) noexcept = 0;
 
         /// \brief Update the state.
         ///
-        /// \param self The shared pointer to this engine.
-        /// type: std::shared_ptr<crank::engine>
-        virtual void update(std::shared_ptr<crank::engine> eng) noexcept = 0;
+        /// \param eng type: crank::engine&
+        virtual void update(crank::engine& eng) noexcept = 0;
 
-
-        /// \brief Draw the state.
+        /// \brief Render the state.
         ///
-        /// \param self The shared pointer to this engine.
-        /// type: std::shared_ptr<crank::engine>
-        virtual void draw(std::shared_ptr<crank::engine> eng) noexcept = 0;
+        /// \param eng type: crank::engine&
+        virtual void render(crank::engine& eng) noexcept = 0;
         
-
         /// \brief Change the state.
         ///
         /// \details Used to change the state.
         ///
-        /// \param self The shared pointer to this engine.
-        /// type: std::shared_ptr<crank::engine>
-        void change_state(std::shared_ptr<crank::engine> eng, base* state) noexcept
-        { eng->change_state(state); }
+        /// \param eng type: crank::engine&
+        void change_state(crank::engine& eng, base& state) noexcept
+        { eng.change_state(state); }
 
     protected:
 
         /// \brief Protected default constructor.
         base() = default;
     
-    }; /// class base
+    };  /// class base
 
-} /// namespace crank::states
+}  /// namespace crank::states
 
-#endif /// BASE_HPP
+#endif /// CRANK_STATES_BASE

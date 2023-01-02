@@ -18,91 +18,81 @@
 namespace crank
 {
 
-    void engine::init(details::dim&& window, details::dim&& viewport, std::shared_ptr<engine> self) noexcept
+    auto engine::init() noexcept -> void
     {
         m_running = true;
         m_resetting = false;
-
-        m_window = std::move(window);
-        m_viewport = std::move(viewport);
-
-        m_self = self;
     }
 
-
-    void engine::cleanup() noexcept
+    auto engine::cleanup() noexcept -> void
     {
         while(!m_states.empty())
         {
-            m_states.back()->cleanup();
+            m_states.back().get().cleanup();
             m_states.pop_back();
         }
     }
 
-    
-    void engine::push_state(states::base* state) noexcept
+    auto engine::push_state(states::base& state) noexcept -> void
     {
         if (!m_states.empty()) 
-        { m_states.back()->pause(); }
+            m_states.back().get().pause();
 
         m_states.push_back(state);
-        m_states.back()->init(m_self);
+        m_states.back().get().init(*this);
     }
 
-    
-    void engine::pop_state() noexcept
+    auto engine::pop_state() noexcept -> void
     {
         if (!m_states.empty())
         {
-            m_states.back()->cleanup();
+            m_states.back().get().cleanup();
             m_states.pop_back();
         }
 
         if (!m_states.empty())
-        { m_states.back()->resume(); }
+            m_states.back().get().resume();
     }
-
-
     
-    void engine::change_state(states::base* state) noexcept
+    auto engine::change_state(states::base& state) noexcept -> void
     {
         if (!m_states.empty())
         {
-            m_states.back()->cleanup();
+            m_states.back().get().cleanup();
             m_states.pop_back();
         }
 
         m_states.push_back(state);
-        m_states.back()->init(m_self);      
+        m_states.back().get().init(*this);      
     }
 
-
-    void engine::handle_events() noexcept
+    auto engine::handle_events() noexcept -> void
     {
         if (!m_states.empty())
-        { m_states.back()->handle_events(m_self); }
+            m_states.back().get().handle_events(*this);
     }
 
-
-    void engine::update() noexcept
+    auto engine::update() noexcept -> void
     {
         if (!m_states.empty())
-        { m_states.back()->update(m_self); }
+            m_states.back().get().update(*this);
     }
 
-
-    void engine::draw() noexcept
+    auto engine::render() noexcept -> void
     {
         if (!m_states.empty())
-        { m_states.back()->draw(m_self); }
+            m_states.back().get().render(*this);
     }
 
-
-    void engine::quit() noexcept
+    auto engine::quit() noexcept -> void
     { m_running = false; }
 
 
-    bool engine::running() const noexcept
+    auto engine::running() const noexcept -> bool
     { return m_running; }
+
+    /// \brief Get resetting state.
+    auto engine::resetting() const noexcept -> bool
+    { return m_resetting; }
     
 } /// namespace crank

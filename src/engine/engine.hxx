@@ -13,43 +13,28 @@
 ///
 /// license: MIT
 
-#ifndef CRANK_ENGINE_H
-#define CRANK_ENGINE_H 1
+#ifndef CRANK_ENGINE
+#   define CRANK_ENGINE
 
 #include <vector>
 #include <utility>
 #include <memory>
 
-/// \brief crank namespace
+
 namespace crank
 {
-
-    /// \brief details namespace
-    namespace details
-    {
-        /// \brief Two dimensional sizes. 
-        struct dim
-        { 
-            std::size_t height;
-            std::size_t width;
-        }; /// struct dim
-    
-    } /// namespace details
-
-
-    /// \brief states namespace
     namespace states 
     {
-        class base; ///< Forward declaration of states::base class.
+        class base;  ///< Forward declaration of states::base class.
 
-    } /// namespace states
+    }  /// namespace states
 
 
-    class data; ///< Forward declaration of crank::data class.
+    class data;  ///< Forward declaration of crank::data class.
 
 
     /// \brief The basic engine class. Used to manage states 
-    /// and state transistions.
+    /// and state transitions.
     class engine
     {
     protected:
@@ -57,44 +42,24 @@ namespace crank
         bool m_running;
         bool m_resetting;
 
-        mutable std::vector<states::base*> m_states;
-
-        details::dim m_window;
-        details::dim m_viewport;
-
-        std::shared_ptr<engine> m_self;
+        mutable std::vector<std::reference_wrapper<states::base>> m_states;
 
     public:
 
         /// \brief Default Constructor.
         engine() = default;
 
-
-        /// \brief Initializes the engine with 
-        /// window and viewport dimensions.
-        ///
-        /// \details The window and viewport dimensions
-        /// are moved into the engine.
-        ///
-        /// \param window The window dimensions.
-        /// type: crank::details::dim | qualifiers: [rvalue]
-        /// \param viewport The viewport dimensions.
-        /// type: crank::details::dim | qualifiers: [rvalue]
-        /// \param self The shared pointer to this engine.
-        /// type: std::shared_ptr<crank::engine>
-        void init(details::dim&& window, details::dim&& viewport, std::shared_ptr<engine> self) noexcept;
-
+        /// \brief Initializes the engine.
+        auto init() noexcept -> void;
 
         /// \brief Destructor.
         ~engine() = default;
-
 
         /// \brief Performs clean up 
         ///
         /// \details Cleans up all states that
         /// are stored in the state stack.
-        void cleanup() noexcept;
-
+        auto cleanup() noexcept -> void;
 
         /// \brief Push a new state.
         ///
@@ -102,55 +67,48 @@ namespace crank
         /// the engine state stack.
         ///
         /// \param state The state to push.
-        /// type: crank::states::base*
-        void push_state(states::base* state) noexcept;
-
+        /// type: crank::states::base&
+        auto push_state(states::base&) noexcept -> void;
 
         /// \brief Pop the last state.
         ///
         /// \details Pops the last pointer to a 
         /// state from the engine state stack.
-        void pop_state() noexcept;
-
+        auto pop_state() noexcept -> void;
 
         /// \brief Change current state.
         /// 
         /// \details Performs clean up of the last state
         /// on the stack, then pushes a new state.
-        void change_state(states::base* state) noexcept;
+        auto change_state(states::base& state) noexcept -> void;
 
 
         /// \brief Handle events.
         ///
         /// \details Calls the `handle_events` method
         /// of the current (last) state in the stack.
-        void handle_events() noexcept;
+        auto handle_events() noexcept -> void;
         
-
         /// \brief Update.
         ///
         /// \details Calls the `update` method of
         /// the current (last) state in the stack. 
-        void update() noexcept;
+        auto update() noexcept -> void;
         
-
-        /// \brief Draw.
+        /// \brief Render.
         ///
-        /// \details Calls the `draw` method of
+        /// \details Calls the `render` method of
         /// the current (last) state in the stack.
-        void draw() noexcept;
-
+        auto render() noexcept -> void;
 
         /// \brief Quit current engine.
-        void quit() noexcept;
+        auto quit() noexcept -> void;
         
-
         /// \brief Get running state.
-        bool running() const noexcept;
+        auto running() const noexcept -> bool;
         
-
         /// \brief Get resetting state.
-        bool resetting() const noexcept;
+        auto resetting() const noexcept -> bool;
         
     }; /// class engine
 

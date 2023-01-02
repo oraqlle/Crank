@@ -8,12 +8,10 @@ protected:
 
 public:
     explicit global_vars(int n, const std::string& s) 
-    : num(n) 
-    , str(s)
-    {}
+    : num(n) , str(s) { }
 
-    static global_vars* instance()
-    { return &m_globals; }
+    static global_vars& instance()
+    { return m_globals; }
 
 private:
 

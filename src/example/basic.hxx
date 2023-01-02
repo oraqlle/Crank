@@ -44,7 +44,7 @@ namespace crank::states
     {
     public:
 
-        void init(std::shared_ptr<engine> eng) noexcept;
+        void init(crank::engine& eng) noexcept;
 
         void cleanup() noexcept;
 
@@ -52,18 +52,18 @@ namespace crank::states
 
         void resume() noexcept;
 
-        void handle_events(std::shared_ptr<crank::engine> eng) noexcept;
+        void handle_events(crank::engine& eng) noexcept;
 
-        void update(std::shared_ptr<crank::engine> eng) noexcept;
+        void update(crank::engine& eng) noexcept;
 
-        void draw(std::shared_ptr<crank::engine> eng) noexcept;
+        void render(crank::engine& eng) noexcept;
 
         /// \brief Get the state instance.
         ///
         /// \details Returns a static pointer to 
         /// the state instance held by this state. 
-        static basic* instance()
-        { return &m_basic; }
+        static basic& instance()
+        { return m_basic; }
 
     protected:
 
@@ -75,6 +75,8 @@ namespace crank::states
         /// \brief Static instance of the this 
         /// state type.
         static basic m_basic;
+
+        int i;
 
     }; /// class basic
 
