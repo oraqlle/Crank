@@ -1,65 +1,67 @@
-/// -*- C++ -*- Header compatiability <engine.hpp>
+/// -*- C++ -*- Header compatibility <engine.hxx>
 
-/// \brief The basic engine class. Used to manage states and state transistions.
-/// \file engine.hpp
+/// \brief The basic engine class. Used to manage states and state transitions.
+/// \file engine.hxx
 ///
-/// author: Tyler Swann (oraqlle@github.com)
+/// author: Tyler Swann (tyler.swann05@gmail.com)
 ///
-/// version: 0.1.0
+/// version: 0.2.0
 ///
-/// date: 27-06-2022
+/// date: 27-02-2023
 ///
-/// copyright: Copyright (c) 2022
+/// copyright: Copyright (c) 2022-2023
 ///
 /// license: MIT
 
 #ifndef CRANK_ENGINE
 #   define CRANK_ENGINE
 
-#include <vector>
-#include <utility>
+#include <functional>
 #include <memory>
-
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
 namespace crank
 {
     namespace states 
     {
-        class base;  ///< Forward declaration of states::base class.
+        class state_interface;  ///< Forward declaration of states::base_interface class.
 
     }  /// namespace states
-
-
-    class data;  ///< Forward declaration of crank::data class.
 
 
     /// \brief The basic engine class. Used to manage states 
     /// and state transitions.
     class engine
     {
-    protected:
+    public:
 
-        bool m_running;
-        bool m_resetting;
-
-        mutable std::vector<std::reference_wrapper<states::base>> m_states;
+        using state_ptr_type        = std::shared_ptr<states::state_interface>;
+        using state_factory_type    = std::function<state_ptr_type()>;
+        using factory_map_type      = std::unordered_map<int, state_factory_type>;
+        using state_type            = std::vector<state_ptr_type>;
 
     public:
 
         /// \brief Default Constructor.
-        engine() = default;
-
-        /// \brief Initializes the engine.
-        auto init() noexcept -> void;
+        engine() noexcept;
 
         /// \brief Destructor.
-        ~engine() = default;
+        ~engine() noexcept;
 
-        /// \brief Performs clean up 
+        /// \brief Registers a state in the engine
         ///
-        /// \details Cleans up all states that
-        /// are stored in the state stack.
-        auto cleanup() noexcept -> void;
+        /// \details Registers a state and creates a 
+        /// factory function in the engine that enables
+        /// generation of the state.
+        ///
+        /// \tparam State
+        /// \tparam Args...
+        /// \param id type: int
+        /// \param args type: Args&&...
+        template<typename State, typename... Args>
+        auto make_factory_for(int id, Args&&... args) noexcept -> void;
 
         /// \brief Push a new state.
         ///
@@ -67,8 +69,8 @@ namespace crank
         /// the engine state stack.
         ///
         /// \param state The state to push.
-        /// type: crank::states::base&
-        auto push_state(states::base&) noexcept -> void;
+        /// type: crank::states::state_interface&
+        auto push_state(int id) noexcept -> void;
 
         /// \brief Pop the last state.
         ///
@@ -80,8 +82,7 @@ namespace crank
         /// 
         /// \details Performs clean up of the last state
         /// on the stack, then pushes a new state.
-        auto change_state(states::base& state) noexcept -> void;
-
+        auto change_state(int id) noexcept -> void;
 
         /// \brief Handle events.
         ///
@@ -109,8 +110,23 @@ namespace crank
         
         /// \brief Get resetting state.
         auto resetting() const noexcept -> bool;
+
+    protected:
+
+        bool m_running;
+        bool m_resetting;
+        factory_map_type m_factories;
+        state_type m_states;
         
     }; /// class engine
+
+
+    template<typename State, typename... Args>
+    auto engine::make_factory_for(int id, Args&&... args) noexcept -> void
+    {
+        m_factories[id] = [... args=std::forward<Args>(args)]()
+        { return std::make_shared<State>(args...); };
+    }
 
 } /// namespace crank
 

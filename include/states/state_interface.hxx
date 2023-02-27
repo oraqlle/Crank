@@ -1,20 +1,20 @@
-/// -*- C++ -*- Header compatiability <base.hpp>
+/// -*- C++ -*- Header compatibility <state_interface.hxx>
 
 /// \brief Base state abstract virtual class.
-/// \file base.hpp
+/// \file state_interface.hxx
 ///
-/// author: Tyler Swann (oraqlle@github.com)
+/// author: Tyler Swann (tyler.swann05@gmail.com)
 ///
 /// version: 0.2.0
 ///
-/// date: 02-01-2023
+/// date: 27-02-2023
 ///
 /// copyright: Copyright (c) 2022-2023
 ///
 /// license: MIT
 
-#ifndef CRANK_STATES_BASE
-#   define CRANK_STATES_BASE
+#ifndef CRANK_STATES_STATE_INTERFACE
+#   define CRANK_STATES_STATE_INTERFACE
 
 #include <engine/engine.hxx>
 
@@ -24,17 +24,17 @@
 namespace crank::states
 {
 
-    /// \brief Base state 
+    /// \brief Base State Interface 
     ///
     /// \details An abstract virtual class designed 
     /// to create a basic interface for all states.
     /// New states are derived from this class.
-    class base
+    class state_interface
     {
     public:
 
         /// \brief Default Virtual Destructor
-        virtual ~base() = default;
+        virtual ~state_interface() = default;
 
 
         /// \brief Initialize the state.
@@ -76,16 +76,20 @@ namespace crank::states
         /// \details Used to change the state.
         ///
         /// \param eng type: crank::engine&
-        void change_state(crank::engine& eng, base& state) noexcept
-        { eng.change_state(state); }
+        void change_state(crank::engine& eng, int id) noexcept
+        { eng.change_state(id); }
 
     protected:
 
         /// \brief Protected default constructor.
-        base() = default;
+        state_interface() = default;
+
+    protected:
+
+        int m_id;
     
-    };  /// class base
+    };  /// class state_interface
 
 }  /// namespace crank::states
 
-#endif /// CRANK_STATES_BASE
+#endif /// CRANK_STATES_STATE_INTERFACE

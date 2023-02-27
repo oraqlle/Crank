@@ -1,15 +1,15 @@
-/// -*- C++ -*- Header compatiability <basic.hpp>
+/// -*- C++ -*- Header compatibility <basic.hxx>
 
 /// \brief 
-/// \file basic.hpp
+/// \file basic.hxx
 ///
-/// author: Tyler Swann (oraqlle@github.com)
+/// author: Tyler Swann (tyler.swann05@gmail.com)
 ///
-/// version: 0.1.0
+/// version: 0.2.0
 ///
 /// date: 26-06-2022
 ///
-/// copyright: Copyright (c) 2022
+/// copyright: Copyright (c) 2022-2023
 ///
 /// license: MIT
 
@@ -17,7 +17,6 @@
 #define BASIC_HPP 1
 
 #include <crank/crank.hxx>
-#include <example/globals.hxx>
 
 #include <string>
 
@@ -40,9 +39,11 @@ namespace crank::states
     /// ```cpp
     /// crank::states::basic crank::states::basic::m_basic;
     /// ```
-    class basic : public base
+    class basic : public state_interface
     {
     public:
+
+        explicit basic(int n, std::string msg) noexcept;
 
         void init(crank::engine& eng) noexcept;
 
@@ -62,8 +63,8 @@ namespace crank::states
         ///
         /// \details Returns a static pointer to 
         /// the state instance held by this state. 
-        static basic& instance()
-        { return m_basic; }
+        // static basic& instance()
+        // { return m_basic; }
 
     protected:
 
@@ -74,9 +75,10 @@ namespace crank::states
 
         /// \brief Static instance of the this 
         /// state type.
-        static basic m_basic;
+        // static basic m_basic;
 
-        int i;
+        int m_i;
+        std::string m_msg;
 
     }; /// class basic
 

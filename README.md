@@ -105,8 +105,8 @@ Here I have implemented the interface for the `basic` class. The main thing to n
 #ifndef BASIC_HPP
 #define BASIC_HPP 1
 
-#include <crank/crank.hpp>
-#include <example/globals.hpp>
+#include <crank/crank.hxx>
+#include <example/globals.hxx>
 
 #include <string>
 
@@ -152,7 +152,7 @@ namespace crank::states
 The implementation is nothing special, it just prints the current method so it can be seen what is being called and when. There are two things to notice, the first is the first line below the include directives, this helps to complete the type definition of the static member. Second thing to notice is the `global_vars` type. It's `instance()` method is used to access the data through a pointer. The defintition of the `global_vars` class is [below](#global-variables).
 
 ```cpp
-#include <example/basic.hpp>
+#include <example/basic.hxx>
 
 #include <iostream>
 
@@ -205,7 +205,7 @@ What you'll notice is the explicit constructor, this is used so that the global 
 The second thing to notice is that this variation of `global_vars` is similar to how we implemented the `basic` class. A stati self member and a method (`instance()`) for accessing a pointer to the self reference. This allows you to use the `instance()` method to access the global data like a struct pointer.
 
 ```cpp
-#include <crank/crank.hpp>
+#include <crank/crank.hxx>
 #include <string>
 
 class global_vars : public crank::data
@@ -240,8 +240,8 @@ In the main file, you'll have to implement the full type of the `global_vars` cl
 To create an engine object is super simple, all you need is to include the `<memory>` standard header and use the `std::make_shared` method. To initialise the engine, you have to call the engine's `init()` method with the screen and viewport dimensions along with the engine's `shared_ptr`.
 
 ```cpp
-#include <crank/crank.hpp>
-#include <example/basic.hpp>
+#include <crank/crank.hxx>
+#include <example/basic.hxx>
 
 #include <memory>
 #include <iostream>
@@ -266,8 +266,8 @@ Because we made the the `global_vars` only have a string and int as members, the
 Also notice how we access the instance of the `basic` state class, in the call to `engine::change_state`, we have to call it through the namespace operators `::`.
 
 ```cpp
-#include <crank/crank.hpp>
-#include <example/basic.hpp>
+#include <crank/crank.hxx>
+#include <example/basic.hxx>
 
 #include <memory>
 #include <iostream>

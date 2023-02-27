@@ -17,7 +17,7 @@
 #   define CRANK_
 
 #include <engine/engine.hxx>
-#include <states/base.hxx>
-#include <data/data.hxx>
+#include <states/state_interface.hxx>
+#include <states/id.hxx>
 
 #endif  /// CRANK_
