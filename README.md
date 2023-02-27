@@ -21,12 +21,11 @@ Crank is built using the [bpt](https://bpt.pizza) build tool and is hosted on th
   - [Design and Use](#design-and-use)
     - [The Runtime Engine](#the-runtime-engine)
     - [States](#states)
-    - [Data and Shared Resources](#data-and-shared-resources)
   - [Example](#example)
     - [A simple state](#a-simple-state)
-    - [Global variables](#global-variables)
-    - [Making an Engine Object](#making-an-engine-object)
-    - [Final Result](#final-result)
+    - [Using the engine](#using-the-engine)
+  - [Example Projects](#example-projects)
+  - [License, Code of Conduct \& Contributing](#license-code-of-conduct--contributing)
   - [Links and Resources](#links-and-resources)
 
 ---
@@ -43,7 +42,7 @@ Crank can be including entirely from the `<crank.hxx>` header.
 
 This framework has two major components, the runtime engine which manages the state-stack and flow of operations and the states.
 
-Crank uses the _Input, Update, Output_ (IUO) model to run a program. In crank these are methods available in both the `crank::engine` class and `crank::states::base` class called _handle_events(), update(),_ and _render()_ respectively.
+Crank uses the _Input_, _Update_, _Output_ (IUO) model to run a program. In crank these are methods called from a `crank::engine` object which dispatches to the current state. These methods are named called `handle_events()`, `update()`, and `render()` respectively.
 
 - `handle_events()` - Handles events such as keyboard input.
 - `update()` - Updates the internal state of a given state object
@@ -53,43 +52,27 @@ An example of a simple running program can be found in the [example](#example) s
 
 ### The Runtime Engine
 
-The `crank::engine` class is very simple. It's main job is to manage the stack of states and provide an interface for calling the _IUO_ methods. Because of the design of the engine class, an engine instance is managed by a `std::shared_ptr`. This creates the engine. The engine is then initialised using it's `init()` method which takes the screen and viewport dimensions as well as a copy of the `std::shared_ptr` to the engine resource.
+The `crank::engine` class is very simple. It's main job is to manage the stack of states and provide an interface for calling the various methods of different states. States are created as `std::shared_ptr` and are created from factory functions registered to the engine. States are registered to the engine using an ID. This allows for different states to be register and spawned simply using the ID. When registering state, you can forward arguments that will be used by the state constructor. This is how resources are shared between states.
 
-The engine class also features some _meta-methods_ that help diagnose the state of the engine. Two such methods are the  `running()` method which indicates whether engine is currently running or if it is in the quit phase and the `quit()` method which shuts down the current engine and leaves it in its pre-init phase. This allows you to run a countinues loop while the engine is running and have a state manage if the engine should quit.
+A new state is pushed to the stack using the `push_state()` and `pop_state()` methods with `push_state()` taking the corresponding state ID. There is also the `change_state()` method which can change the current state to a new one using the new states ID. Popping and changing state will result in the state being cleaned up by the engine.
 
-The engine class uses the `handle_events()`, `update()` and `draw()` methods to run the top most state's corresponding methods.
-
-The engine also has three more vital methods. The `push_state()`, `change_state()` and `pop_state()` methods. The push and pop methods are pretty self explainatory, they push or pop a state to/from the state-stack, calling the states init, cleanup or pause/resume methods respectively.
-
-Change state is a bit different, if you want to change to a new state but don't want to recover the last state, `change_state()` will clean up the current state and replace it with the indicated state. (e.g. when going from a game state to a game over).
+The engine class also features some _meta-methods_ that help diagnose the state of the engine. Two such methods are the  `running()` method which indicates whether engine is currently running or if it is in the quit phase and the `quit()` method which shuts down the current engine and leaves it in its pre-init phase. This allows you to run a continues loop while the engine is running and have a state manage if the engine should quit.
 
 ### States
 
-The `crank::states::base` class is a pure virtual class design to blueprint the interface that a state should provide. These are only the minimum requirements for the engine to use the state, in derived state classes, you can implement other methods for handle other operations specific to that states processing.
+The `crank::states::state_interface` class is a pure virtual class design to blueprint the interface that a state should provide. These are only the minimum requirements for the engine to use the state, in derived state classes, you can implement other methods for handle other operations specific to that states processing.
 
-The main methods provided by `crank::states::base` are the `handle_events()`, `update()` and `draw()` methods. These methods are called by the engine when the corresponding engine methods are called. They are used to handle the main processes that can occur in a game or program.
+The main methods provided by `crank::states::state_interface` are the `handle_events()`, `update()` and `draw()` methods. These methods are called by the engine when the corresponding engine methods are called. They are used to handle the main processes that can occur in a game or program.
 
 The base class provides and interface for a `init()` method; called whenever the state is pushed to the engines state-stack and a `cleanup()` method called whenever the state is changed from the engines state-stack.
 
-A few of the methods take a `std::shared_ptr` to the engine object that called them. These include; `init()`, `handle_events()`, `update()` and `draw()`. This is so you can access a particular engine resource or created your own shared reference.
-
-Derived states use a static self reference to pass instances to the engine. Because of this, any user defined state class that derives from `crank::states::base` need to have (ideally private) a static member of its own type and and a method called `instance()` which returns a static pointer of the states self type. This is declared in the header of the state. In the source file of the state (which should contain the implementation of the derived interface), you also have to fully implement the type of the static member.
-
-e.g.
-
-```cpp
-crank::states::basic crank::states::basic::m_basic;
-```
+A few of the methods take a reference to the engine object that called them. These include; `init()`, `handle_events()`, `update()` and `draw()`. This is so you can access a particular engine resource or created your own shared reference.
 
 A full implementation is available [below](#example).
 
-The base class also interfaces a `pause()` and `resume()` methods which are used to freeze a state in its current state or unfreeze it to resume processing respectivley. These methods are called when a new state is pushed on top of the current state or is popped off the top.
+The base class also interfaces a `pause()` and `resume()` methods which are used to freeze a state in its current state or unfreeze it to resume processing respectively. These methods are called when a new state is pushed on top of the current state or is popped off the top.
 
 The final requirement for a derived state class is that the default constructor should be _defaulted_ (i.e. `base() = default`) and should be a protected member.
-
-### Data and Shared Resources
-
-One thing to note about states is that you are able to create whatever members and methods you want that can be used by a state but you cannot transfer these variables between states. To this you have to use a global variable model. Crank doesn't enforce a particular model for shared data and resources but the example below implements one for convayence.
 
 ---
 
@@ -102,22 +85,54 @@ Here I will give a full implementation of a basic state and a main function that
 Here I have implemented the interface for the `basic` class. The main thing to notice is the use of the static self member and the `instance()` method.
 
 ```cpp
+/// -*- C++ -*- Header compatibility <basic.hxx>
+
+/// \brief 
+/// \file basic.hxx
+///
+/// author: Tyler Swann (tyler.swann05@gmail.com)
+///
+/// version: 0.2.0
+///
+/// date: 28-02-2023
+///
+/// copyright: Copyright (c) 2022-2023
+///
+/// license: MIT
+
 #ifndef BASIC_HPP
-#define BASIC_HPP 1
+#   define BASIC_HPP 1
 
 #include <crank/crank.hxx>
-#include <example/globals.hxx>
 
 #include <string>
 
+
+/// \brief crank::states namespace
 namespace crank::states
 {
 
-    class basic : public base
+    /// \brief Basic state
+    ///
+    /// \details A basic state class designed
+    /// to showcase how a state might look.
+    ///
+    /// \note In the source definition of this state, 
+    /// you have to define a `crank::states::<state>` 
+    /// object at the top of the file, (below that 
+    /// #include directives is ideal and outside the 
+    /// `crank::states` namespace).
+    /// eg.
+    /// ```cpp
+    /// crank::states::basic crank::states::basic::m_basic;
+    /// ```
+    class basic : public state_interface
     {
     public:
 
-        void init(std::shared_ptr<engine> eng) noexcept;
+        explicit basic(int n, std::string msg) noexcept;
+
+        void init(crank::engine& eng) noexcept;
 
         void cleanup() noexcept;
 
@@ -125,22 +140,32 @@ namespace crank::states
 
         void resume() noexcept;
 
-        void handle_events(std::shared_ptr<crank::engine> eng) noexcept;
+        void handle_events(crank::engine& eng) noexcept;
 
-        void update(std::shared_ptr<crank::engine> eng) noexcept;
+        void update(crank::engine& eng) noexcept;
 
-        void draw(std::shared_ptr<crank::engine> eng) noexcept;
+        void render(crank::engine& eng) noexcept;
 
-        static basic* instance()
-        { return &m_basic; }
+        /// \brief Get the state instance.
+        ///
+        /// \details Returns a static pointer to 
+        /// the state instance held by this state. 
+        // static basic& instance()
+        // { return m_basic; }
 
     protected:
 
+        /// \brief Protected Default Constructor
         basic() = default;
     
     private:
 
-        static basic m_basic;
+        /// \brief Static instance of the this 
+        /// state type.
+        // static basic m_basic;
+
+        int m_i;
+        std::string m_msg;
 
     }; /// class basic
 
@@ -149,156 +174,138 @@ namespace crank::states
 #endif /// BASIC_HPP
 ```
 
-The implementation is nothing special, it just prints the current method so it can be seen what is being called and when. There are two things to notice, the first is the first line below the include directives, this helps to complete the type definition of the static member. Second thing to notice is the `global_vars` type. It's `instance()` method is used to access the data through a pointer. The defintition of the `global_vars` class is [below](#global-variables).
+The implementation is nothing special, it just prints the current method so it can be seen what is being called and when.
 
 ```cpp
 #include <example/basic.hxx>
 
 #include <iostream>
 
-
-/// \brief Completes the type definition
-crank::states::basic crank::states::basic::m_basic;
-
 namespace crank::states
 {   
-    void basic::init([[maybe_unused]] std::shared_ptr<crank::engine> eng) noexcept
-    { 
-        std::cout << "basic::init() with engine ptr count: " << eng.use_count() << std::endl;
-        std::cout << "init::m_globals->num = " << global_vars::instance()->num << std::endl;
-        std::cout << "init::m_globals->str = " << global_vars::instance()->str << std::endl;
+    basic::basic(int n, std::string msg) noexcept
+        : m_i { n }
+        , m_msg { msg }
+    { }
 
-        if (global_vars::instance()->num == 0)
-        {
-            global_vars::instance()->num = 1;
-            global_vars::instance()->str = "hello";
-        }
+    void basic::init([[maybe_unused]] crank::engine& eng) noexcept
+    {
+        std::clog << "i = " << m_i << std::endl;
+        std::clog << "msg = " << m_msg << std::endl;
+        std::clog << m_msg + " - basic::init()" << std::endl;
+        m_i += 1;
+
+        std::clog << "i = " << m_i << std::endl;
     }
 
     void basic::cleanup() noexcept
-    { std::cout << "basic::cleanup()" << std::endl; }
+    { std::clog << m_msg + " - basic::cleanup()" << std::endl; }
 
     void basic::pause() noexcept
-    { std::cout << "basic::pause()" << std::endl; }
+    { std::clog << m_msg + " - basic::pause()" << std::endl; }
 
     void basic::resume() noexcept
-    { std::cout << "basic::resume()" << std::endl; }
+    { std::clog << m_msg + " - basic::resume()" << std::endl; }
 
-    void basic::handle_events([[maybe_unused]] std::shared_ptr<crank::engine> eng) noexcept
-    { std::cout << "basic::handle_events() with engine ptr count: " << eng.use_count() << std::endl; }
+    void basic::handle_events([[maybe_unused]] crank::engine& eng) noexcept
+    { 
+        std::clog << m_msg + " - basic::handle_events() with i: " << m_i << std::endl; 
+        m_i += 1;
+    }
 
-    void basic::update([[maybe_unused]] std::shared_ptr<crank::engine> eng) noexcept
-    { std::cout << "basic::update() with engine ptr count: " << eng.use_count() << std::endl; }
+    void basic::update([[maybe_unused]] crank::engine& eng) noexcept
+    { 
+        std::clog << m_msg + " - basic::update() with i: " << m_i << std::endl;
+        m_i += 1;
+    }
 
-    void basic::draw([[maybe_unused]] std::shared_ptr<crank::engine> eng) noexcept
-    { std::cout << "basic::draw() with engine ptr count: " << eng.use_count() << std::endl; }
+    void basic::render([[maybe_unused]] crank::engine& eng) noexcept
+    { 
+        std::clog << m_msg + " - basic::render() with i: " << m_i << std::endl;
+        m_i += 1; 
+    }
 
 } /// namespace crank
 ```
 
-### Global variables
-
-The task of sharing data across states is a difficult problem. File crank doesn't offer a direct way to manage shared data through the engine or the states, there is a `crank::data` class that acts as a decorator to create global data.
-
-What you'll notice is the explicit constructor, this is used so that the global data's construction can be specified and customised. Here it only copies the data.
-
-The second thing to notice is that this variation of `global_vars` is similar to how we implemented the `basic` class. A stati self member and a method (`instance()`) for accessing a pointer to the self reference. This allows you to use the `instance()` method to access the global data like a struct pointer.
-
-```cpp
-#include <crank/crank.hxx>
-#include <string>
-
-class global_vars : public crank::data
-{
-protected:
-    global_vars() = default;
-
-public:
-    explicit global_vars(int n, const std::string& s) 
-    : num(n) 
-    , str(s)
-    {}
-
-    static global_vars* instance()
-    { return &m_globals; }
-
-private:
-
-    static global_vars m_globals;
-
-public:
-
-    int num;
-    std::string str;
-};
-```
-
-In the main file, you'll have to implement the full type of the `global_vars` class similar to what we did for the `basic` class.
-
-### Making an Engine Object
-
-To create an engine object is super simple, all you need is to include the `<memory>` standard header and use the `std::make_shared` method. To initialise the engine, you have to call the engine's `init()` method with the screen and viewport dimensions along with the engine's `shared_ptr`.
+### Using the engine
 
 ```cpp
 #include <crank/crank.hxx>
 #include <example/basic.hxx>
 
-#include <memory>
 #include <iostream>
 #include <string>
 
-auto main() -> int
-{
-    auto engine = std::make_shared<crank::engine>();
+using namespace std::literals;
 
-    engine->init({640, 480}, {640, 480}, engine);
-
-    return 0;
-}
-```
-
-### Final Result
-
-To put it all together we will implement the full type of th `global_var` class and create a short loop that will run through the _IUO_ methods 4 times.
-
-Because we made the the `global_vars` only have a string and int as members, the type of `m_globals` only takes `0` and `"global_var"`.
-
-Also notice how we access the instance of the `basic` state class, in the call to `engine::change_state`, we have to call it through the namespace operators `::`.
-
-```cpp
-#include <crank/crank.hxx>
-#include <example/basic.hxx>
-
-#include <memory>
-#include <iostream>
-#include <string>
-
-
-global_vars global_vars::m_globals(0, "global_var");
-
+/// State ID's (user side)
+enum id { Basic1, Basic2 };
 
 auto main() -> int
 {
-    auto engine = std::make_shared<crank::engine>();
+    /// Create an engine
+    auto engine = crank::engine{};
 
-    engine->init({640, 480}, {640, 480}, engine);
+    /// Register Two different `Basic` states.
+    /// You must register the type of the state
+    /// as a template type parameter. We can also
+    /// forward values to be used in the construction
+    /// of the states. These arguments must follow 
+    /// the state ID. 
+    ///
+    /// \note: The ID of a state is just an `int` 
+    /// thus, you can use regular enums as ID's 
+    /// to help decern ID's.
+    engine.make_factory_for<crank::states::basic>(id::Basic1, 7, "Basic 1"s);
+    engine.make_factory_for<crank::states::basic>(id::Basic2, 55, "Basic 2"s);
 
-    engine->change_state(crank::states::basic::instance());
+    /// Launch `Basic1` by changing state.
+    engine.change_state(id::Basic1);
 
     std::cout << "---------------------------" << std::endl;
 
+    /// Run full loop four times.
     auto i { 0 }; 
-    while (i < 4 && engine->running())
+    while (i < 4 && engine.running())
     {
-        engine->handle_events();
-        engine->update();
-        engine->draw();
-        std::cout << "shared_ptr: " << engine.use_count() << std::endl;
+        engine.handle_events();
+        engine.update();
+        engine.render();
         std::cout << "loops: " << i++ << "\n---------------------------" << std::endl;
     }
 
-    engine->quit();
-    engine->cleanup();
+    /// Push new state, `Basic2` to stack.
+    /// `Basic2` is now the current state.
+    engine.push_state(id::Basic2);
+
+    std::cout << "---------------------------" << std::endl;
+
+    /// Run full loop four more times
+    /// for new state.
+    while (i < 8 && engine.running())
+    {
+        engine.handle_events();
+        engine.update();
+        engine.render();
+        std::cout << "loops: " << i++ << "\n---------------------------" << std::endl;
+    }
+
+    /// Pop top state (`Basic2`) from stack.
+    /// `Basic1` is once again the current state.
+    engine.pop_state();
+
+    /// Run full loop four final times.
+    while (i < 12 && engine.running())
+    {
+        engine.handle_events();
+        engine.update();
+        engine.render();
+        std::cout << "loops: " << i++ << "\n---------------------------" << std::endl;
+    }
+
+    /// Force the engine to quit.
+    engine.quit();
 
     return 0;
 }
@@ -307,38 +314,92 @@ auto main() -> int
 Output:
 
 ```sh
-basic::init() with engine ptr count: 3
-init::m_globals->num = 0
-init::m_globals->str = global_var
+$ ./build/example/game
+i = 7
+msg = Basic 1
+Basic 1 - basic::init()
+i = 8
 ---------------------------
-basic::handle_events() with engine ptr count: 3
-basic::update() with engine ptr count: 3
-basic::draw() with engine ptr count: 3
-shared_ptr: 2
+Basic 1 - basic::handle_events() with i: 8
+Basic 1 - basic::update() with i: 9
+Basic 1 - basic::render() with i: 10
 loops: 0
 ---------------------------
-basic::handle_events() with engine ptr count: 3
-basic::update() with engine ptr count: 3
-basic::draw() with engine ptr count: 3
-shared_ptr: 2
+Basic 1 - basic::handle_events() with i: 11
+Basic 1 - basic::update() with i: 12
+Basic 1 - basic::render() with i: 13
 loops: 1
 ---------------------------
-basic::handle_events() with engine ptr count: 3
-basic::update() with engine ptr count: 3
-basic::draw() with engine ptr count: 3
-shared_ptr: 2
+Basic 1 - basic::handle_events() with i: 14
+Basic 1 - basic::update() with i: 15
+Basic 1 - basic::render() with i: 16
 loops: 2
 ---------------------------
-basic::handle_events() with engine ptr count: 3
-basic::update() with engine ptr count: 3
-basic::draw() with engine ptr count: 3
-shared_ptr: 2
+Basic 1 - basic::handle_events() with i: 17
+Basic 1 - basic::update() with i: 18
+Basic 1 - basic::render() with i: 19
 loops: 3
 ---------------------------
-basic::cleanup()
+Basic 1 - basic::pause()
+i = 55
+msg = Basic 2
+Basic 2 - basic::init()
+i = 56
+---------------------------
+Basic 2 - basic::handle_events() with i: 56
+Basic 2 - basic::update() with i: 57
+Basic 2 - basic::render() with i: 58
+loops: 4
+---------------------------
+Basic 2 - basic::handle_events() with i: 59
+Basic 2 - basic::update() with i: 60
+Basic 2 - basic::render() with i: 61
+loops: 5
+---------------------------
+Basic 2 - basic::handle_events() with i: 62
+Basic 2 - basic::update() with i: 63
+Basic 2 - basic::render() with i: 64
+loops: 6
+---------------------------
+Basic 2 - basic::handle_events() with i: 65
+Basic 2 - basic::update() with i: 66
+Basic 2 - basic::render() with i: 67
+loops: 7
+---------------------------
+Basic 2 - basic::cleanup()
+Basic 1 - basic::resume()
+Basic 1 - basic::handle_events() with i: 20
+Basic 1 - basic::update() with i: 21
+Basic 1 - basic::render() with i: 22
+loops: 8
+---------------------------
+Basic 1 - basic::handle_events() with i: 23
+Basic 1 - basic::update() with i: 24
+Basic 1 - basic::render() with i: 25
+loops: 9
+---------------------------
+Basic 1 - basic::handle_events() with i: 26
+Basic 1 - basic::update() with i: 27
+Basic 1 - basic::render() with i: 28
+loops: 10
+---------------------------
+Basic 1 - basic::handle_events() with i: 29
+Basic 1 - basic::update() with i: 30
+Basic 1 - basic::render() with i: 31
+loops: 11
+---------------------------
+Basic 1 - basic::cleanup()
 ```
 
 ---
+
+## Example Projects
+
+- [Pong game](https://github.com/oraqlle/pong)
+
+## License, Code of Conduct & Contributing
+
+This project is under the [MIT License](LICENSE). The [code of conduct](CODE_OF_CONDUCT.md) is governed by the contributor covenant (v2.1). Contributing guidelines are outlined in the [here](CONTRIBUTING.md).
 
 ## Links and Resources
 

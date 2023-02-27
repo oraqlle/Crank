@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-
-// crank::states::basic crank::states::basic::m_basic;
-
 namespace crank::states
 {   
     basic::basic(int n, std::string msg) noexcept

@@ -7,14 +7,14 @@
 ///
 /// version: 0.2.0
 ///
-/// date: 26-06-2022
+/// date: 28-02-2023
 ///
 /// copyright: Copyright (c) 2022-2023
 ///
 /// license: MIT
 
 #ifndef BASIC_HPP
-#define BASIC_HPP 1
+#   define BASIC_HPP
 
 #include <crank/crank.hxx>
 
