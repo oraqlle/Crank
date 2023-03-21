@@ -404,4 +404,4 @@ This project is under the [MIT License](LICENSE). The [code of conduct](CODE_OF_
 ## Links and Resources
 
 - [bpt](https://bpt.pizza/docs/latest/index.html)
-- [Trove](https://trovepi.dev)
+- [CodeBytes](https://codebytes.netlify.app)
