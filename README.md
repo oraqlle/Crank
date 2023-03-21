@@ -10,7 +10,7 @@ Crank is a simple state management framework in C++. It allows you to create sta
 
 Crank is designed to by as simple as possible and only provides a runtime framework for managing states. It is not designed to be able to render images/displays or handle other forms of processing.
 
-Crank is built using the [bpt](https://bpt.pizza) build tool and is hosted on the [Trove Package Index](https://trovepi.dev). You'll need both resources to use Crank. A full list of [links and resources](#links-and-resources) are at the bottom of the README.
+Crank is built using the [bpt](https://bpt.pizza) build tool and can be obtained from [CodeBytes](https://codebytes.netlify.app). You'll need both resources to use Crank. A full list of [links and resources](#links-and-resources) are at the bottom of the README.
 
 ## Contents
 
@@ -32,7 +32,7 @@ Crank is built using the [bpt](https://bpt.pizza) build tool and is hosted on th
 
 ## Adding to your project
 
-Add `crank@0.1.0` under the dependencies section of your `bpt.yaml` file and run `bpt build` with `--use-repo "trovepi.dev"` (or `-r "trovepi.dev"`) to use the appropriate CRS lookup.
+Add `crank@0.2.0` under the dependencies section of your `bpt.yaml` file and run `bpt build` with `--use-repo "codebytes.netlify.app"` (or `-r "codebytes.netlify.app"`) to use the appropriate CRS lookup.
 
 Crank can be including entirely from the `<crank.hxx>` header.
 
