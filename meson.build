@@ -29,12 +29,10 @@ crank_lib = library(
     soversion : '0'
 )
 
-if meson.is_subproject()
-    crank = declare_dependency(
-        include_directories : include,
-        dependencies : crank_lib
-    )
-endif
+crank = declare_dependency(
+    include_directories : include,
+    link_with : crank_lib
+)
 
 pkgcfg = import('pkgconfig')
 
