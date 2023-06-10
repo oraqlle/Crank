@@ -17,7 +17,7 @@ srcs = files([
 
 subdir('src/basic')
 
-crank_dep = dependency('crank')
+crank_dep = dependency('crank', fallback : ['crank', 'crank'])
 
 main = executable(
     'basic-crank-example-main',
