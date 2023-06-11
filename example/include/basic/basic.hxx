@@ -16,8 +16,8 @@
 #ifndef BASIC_HPP
 #define BASIC_HPP
 
-#include <engine/engine.hxx>
-#include <states/state_interface.hxx>
+#include <engine.hxx>
+#include <state_interface.hxx>
 
 #include <string>
 

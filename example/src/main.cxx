@@ -1,8 +1,7 @@
 #include <basic/basic.hxx>
 
-#include <engine/engine.hxx>
-#include <states/id.hxx>
-#include <states/state_interface.hxx>
+#include <engine.hxx>
+#include <state_interface.hxx>
 
 #include <iostream>
 #include <string>

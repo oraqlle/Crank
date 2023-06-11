@@ -16,8 +16,8 @@
 #ifndef CRANK_STATES_STATE_INTERFACE
 #define CRANK_STATES_STATE_INTERFACE
 
-#include <engine/crank.hxx>
-#include <engine/engine.hxx>
+#include <crank.hxx>
+#include <engine.hxx>
 
 #include <utility>
 
