@@ -1,3 +1,8 @@
-subdir('crank')
-subdir('engine')
-subdir('states')
+install_headers(
+    [
+        'crank.hxx',
+        'engine.hxx',
+        'state_interface.hxx',
+    ],
+    subdir : 'crank'
+)

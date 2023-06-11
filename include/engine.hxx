@@ -16,6 +16,8 @@
 #ifndef CRANK_ENGINE
 #define CRANK_ENGINE
 
+#include <crank.hxx>
+
 #include <functional>
 #include <memory>
 #include <unordered_map>
@@ -24,13 +26,13 @@
 
 namespace crank {
 namespace states {
-    class state_interface; ///< Forward declaration of states::base_interface class.
+    class CRANK_PUBLIC state_interface; ///< Forward declaration of states::base_interface class.
 
 } /// namespace states
 
 /// \brief The basic engine class. Used to manage states
 /// and state transitions.
-class engine {
+class CRANK_PUBLIC engine {
 public:
     using state_ptr_type = std::shared_ptr<states::state_interface>;
     using state_factory_type = std::function<state_ptr_type()>;
@@ -114,7 +116,7 @@ protected:
 }; /// class engine
 
 template <typename State, typename... Args>
-auto engine::make_factory_for(int id, Args&&... args) noexcept -> void
+CRANK_PUBLIC auto engine::make_factory_for(int id, Args&&... args) noexcept -> void
 {
     m_factories[id] = [... args = std::forward<Args>(args)]() { return std::make_shared<State>(args...); };
 }
