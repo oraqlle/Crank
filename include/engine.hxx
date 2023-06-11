@@ -37,7 +37,8 @@ public:
     using state_ptr_type = std::shared_ptr<states::state_interface>;
     using state_factory_type = std::function<state_ptr_type()>;
     using factory_map_type = std::unordered_map<int, state_factory_type>;
-    using state_type = std::vector<state_ptr_type>;
+    using state_map_type = std::unordered_map<int, state_ptr_type>;
+    using state_stack_type = std::vector<state_ptr_type>;
 
 public:
     /// \brief Default Constructor.
@@ -111,12 +112,13 @@ protected:
     bool m_running;
     bool m_resetting;
     factory_map_type m_factories;
-    state_type m_states;
+    state_map_type m_state_map;
+    state_stack_type m_state_stack;
 
 }; /// class engine
 
 template <typename State, typename... Args>
-CRANK_PUBLIC auto engine::make_factory_for(int id, Args&&... args) noexcept -> void
+auto engine::make_factory_for(int id, Args&&... args) noexcept -> void
 {
     m_factories[id] = [... args = std::forward<Args>(args)]() { return std::make_shared<State>(args...); };
 }

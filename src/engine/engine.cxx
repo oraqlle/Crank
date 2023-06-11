@@ -19,66 +19,81 @@ namespace crank {
 engine::engine() noexcept
     : m_running { true }
     , m_resetting { false }
-    , m_factories { engine::factory_map_type {} }
-    , m_states { engine::state_type {} }
+    , m_factories { factory_map_type {} }
+    , m_state_map { state_map_type {} }
+    , m_state_stack { state_stack_type {} }
 {
 }
 
 engine::~engine() noexcept
 {
-    while (!m_states.empty()) {
-        m_states.back()->cleanup();
-        m_states.pop_back();
+    while (!m_state_stack.empty()) {
+        m_state_stack.back()->cleanup();
+        m_state_stack.pop_back();
     }
 }
 
 auto engine::push_state(int id) noexcept -> void
 {
-    if (!m_states.empty())
-        m_states.back()->pause();
+    if (!m_state_stack.empty())
+        m_state_stack.back()->pause();
 
-    m_states.push_back(m_factories[id]());
-    m_states.back()->init(*this);
+    if (!m_state_map.contains(id)) {
+        auto state = m_factories.at(id)();
+        m_state_map.at(id) = state;
+        m_state_stack.push_back(state);
+    } else {
+        m_state_stack.push_back(m_state_map.at(id));
+    }
+
+    m_state_stack.back()->init(*this);
 }
 
 auto engine::pop_state() noexcept -> void
 {
-    if (!m_states.empty()) {
-        m_states.back()->cleanup();
-        m_states.pop_back();
+    if (!m_state_stack.empty()) {
+        m_state_stack.back()->cleanup();
+        m_state_stack.pop_back();
     }
 
-    if (!m_states.empty())
-        m_states.back()->resume();
+    if (!m_state_stack.empty())
+        m_state_stack.back()->resume();
 }
 
 auto engine::change_state(int id) noexcept -> void
 {
-    if (!m_states.empty()) {
-        m_states.back()->cleanup();
-        m_states.pop_back();
+    if (!m_state_stack.empty()) {
+        m_state_stack.back()->cleanup();
+        m_state_stack.pop_back();
     }
 
-    m_states.push_back(m_factories[id]());
-    m_states.back()->init(*this);
+    if (!m_state_map.contains(id)) {
+        auto state = m_factories.at(id)();
+        m_state_map.at(id) = state;
+        m_state_stack.push_back(state);
+    } else {
+        m_state_stack.push_back(m_state_map.at(id));
+    }
+
+    m_state_stack.back()->init(*this);
 }
 
 auto engine::handle_events() noexcept -> void
 {
-    if (!m_states.empty())
-        m_states.back()->handle_events(*this);
+    if (!m_state_stack.empty())
+        m_state_stack.back()->handle_events(*this);
 }
 
 auto engine::update() noexcept -> void
 {
-    if (!m_states.empty())
-        m_states.back()->update(*this);
+    if (!m_state_stack.empty())
+        m_state_stack.back()->update(*this);
 }
 
 auto engine::render() noexcept -> void
 {
-    if (!m_states.empty())
-        m_states.back()->render(*this);
+    if (!m_state_stack.empty())
+        m_state_stack.back()->render(*this);
 }
 
 auto engine::quit() noexcept -> void
