@@ -41,7 +41,8 @@ auto engine::push_state(int id) noexcept -> void
 
     if (!m_state_map.contains(id)) {
         auto state = m_factories.at(id)();
-        auto [_, result] = m_state_map.insert_or_assign(id, state);
+        // auto [_, result] = m_state_map.insert_or_assign(id, state);
+        m_state_map.insert_or_assign(id, state);
         m_state_stack.push_back(state);
     } else {
         m_state_stack.push_back(m_state_map.at(id));
@@ -70,7 +71,8 @@ auto engine::change_state(int id) noexcept -> void
 
     if (!m_state_map.contains(id)) {
         auto state = m_factories.at(id)();
-        m_state_map.insert(id, state);
+        // auto [_, result] = m_state_map.insert_or_assign(id, state);
+        m_state_map.insert_or_assign(id, state);
         m_state_stack.push_back(state);
     } else {
         m_state_stack.push_back(m_state_map.at(id));
