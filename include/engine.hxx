@@ -41,7 +41,7 @@ public:
     using state_stack_type = std::vector<state_ptr_type>;
 
     /// \brief Default Constructor.
-    engine() noexcept;
+    engine() noexcept = default;
 
     /// \brief Destructor.
     ~engine() noexcept;

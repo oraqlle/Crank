@@ -3,9 +3,10 @@
 #include <iostream>
 
 namespace crank::states {
-basic::basic(int n, std::string msg) noexcept
+basic::basic(int const& n, std::string msg, int change_to_id) noexcept
     : m_i { n }
     , m_msg { msg }
+    , m_change_to_id { change_to_id }
 {
 }
 
@@ -14,9 +15,6 @@ void basic::init([[maybe_unused]] crank::engine& eng) noexcept
     std::clog << "i = " << m_i << std::endl;
     std::clog << "msg = " << m_msg << std::endl;
     std::clog << m_msg + " - basic::init()" << std::endl;
-    m_i += 1;
-
-    std::clog << "i = " << m_i << std::endl;
 }
 
 void basic::cleanup() noexcept
@@ -37,19 +35,24 @@ void basic::resume() noexcept
 void basic::handle_events([[maybe_unused]] crank::engine& eng) noexcept
 {
     std::clog << m_msg + " - basic::handle_events() with i: " << m_i << std::endl;
-    m_i += 1;
 }
 
 void basic::update([[maybe_unused]] crank::engine& eng) noexcept
 {
     std::clog << m_msg + " - basic::update() with i: " << m_i << std::endl;
-    m_i += 1;
+
+    if (4 < m_i && m_i < 6) {
+        eng.push_state(m_change_to_id);
+    }
+
+    if (8 < m_i && m_i < 10) {
+        eng.pop_state();
+    }
 }
 
 void basic::render([[maybe_unused]] crank::engine& eng) noexcept
 {
     std::clog << m_msg + " - basic::render() with i: " << m_i << std::endl;
-    m_i += 1;
 }
 
 } /// namespace crank

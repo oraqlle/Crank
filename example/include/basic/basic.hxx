@@ -40,7 +40,7 @@ namespace crank::states {
 /// ```
 class basic : public state_interface {
 public:
-    explicit basic(int n, std::string msg) noexcept;
+    explicit basic(int const& n, std::string msg, int change_to_id) noexcept;
 
     void init(crank::engine& eng) noexcept final;
 
@@ -61,8 +61,9 @@ protected:
     basic() = default;
 
 private:
-    int m_i;
+    int const& m_i;
     std::string m_msg;
+    int m_change_to_id;
 
 }; /// class basic
 
