@@ -36,8 +36,8 @@ auto main() -> int
     /// ID values are named to offer better distinction
     /// between ID's and allow ID's to be associated
     /// to the state instance they represent.
-    engine.make_factory_for<crank::states::basic>(id::Basic1, i, "Basic 1"s, id::Basic2);
-    engine.make_factory_for<crank::states::basic>(id::Basic2, i, "Basic 2"s, id::Basic1);
+    engine.make_factory_for<crank::states::basic>(id::Basic1, std::reference_wrapper<int> { i }, "Basic 1"s, id::Basic2);
+    engine.make_factory_for<crank::states::basic>(id::Basic2, std::reference_wrapper<int> { i }, "Basic 2"s, id::Basic1);
 
     /// Launch `Basic1` by changing state.
     engine.change_state(id::Basic1);
@@ -50,7 +50,7 @@ auto main() -> int
         engine.handle_events();
         engine.update();
         engine.render();
-        std::cout << "loops: " << i << "\n---------------------------" << std::endl;
+        std::cout << "loop #: " << i << "\n---------------------------" << std::endl;
         i += 1;
     }
 
@@ -65,7 +65,7 @@ auto main() -> int
         engine.handle_events();
         engine.update();
         engine.render();
-        std::cout << "loops: " << i << "\n---------------------------" << std::endl;
+        std::cout << "loop #: " << i << "\n---------------------------" << std::endl;
         i += 1;
     }
 
@@ -79,7 +79,7 @@ auto main() -> int
         engine.handle_events();
         engine.update();
         engine.render();
-        std::cout << "loops: " << i << "\n---------------------------" << std::endl;
+        std::cout << "loop #: " << i << "\n---------------------------" << std::endl;
         i += 1;
     }
 

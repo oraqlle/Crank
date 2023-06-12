@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace crank::states {
-basic::basic(int const& n, std::string msg, int change_to_id) noexcept
+basic::basic(int& n, std::string msg, int change_to_id) noexcept
     : m_i { n }
     , m_msg { msg }
     , m_change_to_id { change_to_id }
@@ -41,11 +41,11 @@ void basic::update([[maybe_unused]] crank::engine& eng) noexcept
 {
     std::clog << m_msg + " - basic::update() with i: " << m_i << std::endl;
 
-    if (4 < m_i && m_i < 6) {
+    if (m_i == 3) {
         eng.push_state(m_change_to_id);
     }
 
-    if (8 < m_i && m_i < 10) {
+    if (m_i == 7) {
         eng.pop_state();
     }
 }
