@@ -33,6 +33,7 @@ engine::~engine() noexcept
     }
 }
 
+// TODO: Add exception handling for non-existing IDs
 auto engine::push_state(int id) noexcept -> void
 {
     if (!m_state_stack.empty())
