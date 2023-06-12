@@ -108,8 +108,8 @@ public:
     auto resetting() const noexcept -> bool;
 
 private:
-    bool m_running;
-    bool m_resetting;
+    bool m_running = true;
+    bool m_resetting = false;
     factory_map_type m_factories;
     state_map_type m_state_map;
     state_stack_type m_state_stack;

@@ -42,6 +42,7 @@ auto main() -> int
     /// Launch `Basic1` by changing state.
     engine.change_state(id::Basic1);
 
+    std::cout << "Block 1" << std::endl;
     std::cout << "---------------------------" << std::endl;
 
     /// Run full loop four times.
@@ -55,6 +56,7 @@ auto main() -> int
 
     // State `Basic2` is now the active state
 
+    std::cout << "Block 2" << std::endl;
     std::cout << "---------------------------" << std::endl;
 
     /// Run full loop four more times
@@ -68,6 +70,9 @@ auto main() -> int
     }
 
     /// `Basic1` is once again the current state.
+
+    std::cout << "Block 3" << std::endl;
+    std::cout << "---------------------------" << std::endl;
 
     /// Run full loop four final times.
     while (i < 12 && engine.running()) {
