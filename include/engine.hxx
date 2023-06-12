@@ -120,7 +120,7 @@ protected:
 template <typename State, typename... Args>
 auto engine::make_factory_for(int id, Args&&... args) noexcept -> void
 {
-    m_factories[id] = [... args = std::forward<Args>(args)]() { return std::make_shared<State>(args...); };
+    auto [_, result] = m_factories.insert_or_assign(id, [... args = std::forward<Args>(args)]() { return std::make_shared<State>(args...); });
 }
 
 } /// namespace crank
