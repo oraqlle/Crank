@@ -6,14 +6,17 @@
 #include <iostream>
 #include <string>
 
-using namespace std::literals;
-
 /// State ID's (user side)
-enum id { Basic1,
-    Basic2 };
+/// Using enums so ID values are named.
+enum id {
+    Basic1,
+    Basic2
+};
 
 auto main() -> int
 {
+    using namespace std::literals;
+
     /// Create an engine
     auto engine = crank::engine {};
 
@@ -41,7 +44,8 @@ auto main() -> int
         engine.handle_events();
         engine.update();
         engine.render();
-        std::cout << "loops: " << i++ << "\n---------------------------" << std::endl;
+        std::cout << "loops: " << i << "\n---------------------------" << std::endl;
+        i += 1;
     }
 
     /// Push new state, `Basic2` to stack.
@@ -56,7 +60,8 @@ auto main() -> int
         engine.handle_events();
         engine.update();
         engine.render();
-        std::cout << "loops: " << i++ << "\n---------------------------" << std::endl;
+        std::cout << "loops: " << i << "\n---------------------------" << std::endl;
+        i += 1;
     }
 
     /// Pop top state (`Basic2`) from stack.
@@ -68,7 +73,8 @@ auto main() -> int
         engine.handle_events();
         engine.update();
         engine.render();
-        std::cout << "loops: " << i++ << "\n---------------------------" << std::endl;
+        std::cout << "loops: " << i << "\n---------------------------" << std::endl;
+        i += 1;
     }
 
     /// Force the engine to quit.

@@ -72,7 +72,7 @@ public:
     /// \details Used to change the state.
     ///
     /// \param eng type: crank::engine&
-    void change_state(crank::engine& eng, int id) noexcept
+    void change_state(crank::engine& eng, int id) const noexcept
     {
         eng.change_state(id);
     }
@@ -80,9 +80,6 @@ public:
 protected:
     /// \brief Protected default constructor.
     state_interface() = default;
-
-protected:
-    int m_id;
 
 }; /// class state_interface
 

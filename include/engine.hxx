@@ -40,7 +40,6 @@ public:
     using state_map_type = std::unordered_map<int, state_ptr_type>;
     using state_stack_type = std::vector<state_ptr_type>;
 
-public:
     /// \brief Default Constructor.
     engine() noexcept;
 
@@ -108,7 +107,7 @@ public:
     /// \brief Get resetting state.
     auto resetting() const noexcept -> bool;
 
-protected:
+private:
     bool m_running;
     bool m_resetting;
     factory_map_type m_factories;

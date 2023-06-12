@@ -42,36 +42,25 @@ class basic : public state_interface {
 public:
     explicit basic(int n, std::string msg) noexcept;
 
-    void init(crank::engine& eng) noexcept;
+    void init(crank::engine& eng) noexcept final;
 
-    void cleanup() noexcept;
+    void cleanup() noexcept final;
 
-    void pause() noexcept;
+    void pause() noexcept final;
 
-    void resume() noexcept;
+    void resume() noexcept final;
 
-    void handle_events(crank::engine& eng) noexcept;
+    void handle_events(crank::engine& eng) noexcept final;
 
-    void update(crank::engine& eng) noexcept;
+    void update(crank::engine& eng) noexcept final;
 
-    void render(crank::engine& eng) noexcept;
-
-    /// \brief Get the state instance.
-    ///
-    /// \details Returns a static pointer to
-    /// the state instance held by this state.
-    // static basic& instance()
-    // { return m_basic; }
+    void render(crank::engine& eng) noexcept final;
 
 protected:
     /// \brief Protected Default Constructor
     basic() = default;
 
 private:
-    /// \brief Static instance of the this
-    /// state type.
-    // static basic m_basic;
-
     int m_i;
     std::string m_msg;
 

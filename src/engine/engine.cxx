@@ -16,15 +16,6 @@
 
 namespace crank {
 
-engine::engine() noexcept
-    : m_running { true }
-    , m_resetting { false }
-    , m_factories { factory_map_type {} }
-    , m_state_map { state_map_type {} }
-    , m_state_stack { state_stack_type {} }
-{
-}
-
 engine::~engine() noexcept
 {
     while (!m_state_stack.empty()) {
