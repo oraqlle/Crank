@@ -24,54 +24,6 @@ engine::~engine() noexcept
     }
 }
 
-// TODO: Add exception handling for non-existing IDs
-auto engine::push_state(int id) noexcept -> void
-{
-    if (!m_state_stack.empty())
-        m_state_stack.back()->pause();
-
-    if (!m_state_map.contains(id)) {
-        auto state = m_factories.at(id)();
-        // auto [_, result] = m_state_map.insert_or_assign(id, state);
-        m_state_map.insert_or_assign(id, state);
-        m_state_stack.push_back(state);
-    } else {
-        m_state_stack.push_back(m_state_map.at(id));
-    }
-
-    m_state_stack.back()->init(*this);
-}
-
-auto engine::pop_state() noexcept -> void
-{
-    if (!m_state_stack.empty()) {
-        m_state_stack.back()->cleanup();
-        m_state_stack.pop_back();
-    }
-
-    if (!m_state_stack.empty())
-        m_state_stack.back()->resume();
-}
-
-auto engine::change_state(int id) noexcept -> void
-{
-    if (!m_state_stack.empty()) {
-        m_state_stack.back()->cleanup();
-        m_state_stack.pop_back();
-    }
-
-    if (!m_state_map.contains(id)) {
-        auto state = m_factories.at(id)();
-        // auto [_, result] = m_state_map.insert_or_assign(id, state);
-        m_state_map.insert_or_assign(id, state);
-        m_state_stack.push_back(state);
-    } else {
-        m_state_stack.push_back(m_state_map.at(id));
-    }
-
-    m_state_stack.back()->init(*this);
-}
-
 auto engine::handle_events() noexcept -> void
 {
     if (!m_state_stack.empty())
@@ -98,12 +50,6 @@ auto engine::quit() noexcept -> void
 auto engine::running() const noexcept -> bool
 {
     return m_running;
-}
-
-/// \brief Get resetting state.
-auto engine::resetting() const noexcept -> bool
-{
-    return m_resetting;
 }
 
 } /// namespace crank

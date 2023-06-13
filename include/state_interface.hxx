@@ -74,7 +74,7 @@ public:
     /// \param eng type: crank::engine&
     void change_state(crank::engine& eng, int id) const noexcept
     {
-        eng.change_state(id);
+        auto r = eng.change_state(id);
     }
 
 protected:
