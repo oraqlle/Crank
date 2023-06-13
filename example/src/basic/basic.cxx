@@ -42,11 +42,11 @@ void basic::update([[maybe_unused]] crank::engine& eng) noexcept
     std::clog << m_msg + " - basic::update() with i: " << m_i << std::endl;
 
     if (m_i == 3) {
-        eng.push_state(m_change_to_id);
+        auto r = eng.push_state(m_change_to_id);
     }
 
     if (m_i == 7) {
-        eng.pop_state();
+        auto id = eng.pop_state<int>();
     }
 }
 

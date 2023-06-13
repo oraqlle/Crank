@@ -202,7 +202,7 @@ template <typename ID>
         auto back = m_state_stack.back();
         m_state_stack.pop_back();
 
-        auto it = std::ranges::find(m_state_map, back, [](auto& kv_pair) { return kv_pair->second; });
+        auto it = std::ranges::find(m_state_map, back, [](auto& kv_pair) { return kv_pair.second; });
         return it->second;
     }
 

@@ -5,12 +5,29 @@
 
 #include <iostream>
 #include <string>
+#include <variant>
 
 /// State ID's (user side)
 /// Using enums so ID values are named.
-enum id {
+enum class id {
     Basic1,
     Basic2
+};
+
+template <typename... Ts>
+struct match : Ts... {
+    using Ts::operator()...;
+};
+
+template <typename... Ts>
+match(Ts...) -> match<Ts...>;
+
+auto handle_variant = []<typename Ok, typename Err>(crank::result_type<Ok, Err>& var) {
+    std::visit(
+        match {
+            [](const std::monostate&) { std::cout << "Successfully changed state." << std::endl; },
+            [](const std::string& msg) { std::cout << msg << std::endl; } },
+        var);
 };
 
 auto main() -> int
@@ -40,7 +57,9 @@ auto main() -> int
     engine.make_factory_for<crank::states::basic>(id::Basic2, std::reference_wrapper<int> { i }, "Basic 2"s, id::Basic1);
 
     /// Launch `Basic1` by changing state.
-    engine.change_state(id::Basic1);
+    auto r = engine.change_state(id::Basic1);
+
+    handle_variant(r);
 
     std::cout << "Block 1" << std::endl;
     std::cout << "---------------------------" << std::endl;
