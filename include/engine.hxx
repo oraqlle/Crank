@@ -203,7 +203,7 @@ template <typename ID>
         m_state_stack.pop_back();
 
         auto it = std::ranges::find(m_state_map, back, [](auto& kv_pair) { return kv_pair.second; });
-        return it->second;
+        return it->first;
     }
 
     if (!m_state_stack.empty())
