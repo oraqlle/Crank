@@ -53,8 +53,8 @@ auto main() -> int
     /// ID values are named to offer better distinction
     /// between ID's and allow ID's to be associated
     /// to the state instance they represent.
-    engine.make_factory_for<crank::states::basic>(id::Basic1, std::reference_wrapper<int> { i }, "Basic 1"s, id::Basic2);
-    engine.make_factory_for<crank::states::basic>(id::Basic2, std::reference_wrapper<int> { i }, "Basic 2"s, id::Basic1);
+    engine.make_factory_for<crank::states::basic>(id::Basic1, std::reference_wrapper<int> { i }, "Basic 1"s, static_cast<int>(id::Basic2));
+    engine.make_factory_for<crank::states::basic>(id::Basic2, std::reference_wrapper<int> { i }, "Basic 2"s, static_cast<int>(id::Basic1));
 
     /// Launch `Basic1` by changing state.
     auto r = engine.change_state(id::Basic1);
